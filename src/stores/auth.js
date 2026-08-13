@@ -40,7 +40,7 @@ export const PRESET_ACCOUNTS = [
   {
     id: '99999999-9999-9999-9999-999999999999',
     email: 'asa@asagroup.id',
-    full_name: 'Asa (Direktur PT Benlaris / ASA Group)',
+    full_name: 'Asa (Direktur PT Bonanza Tujuh Samudera / BTS)',
     role: 'super_admin',
     cabang_id: null,
     badge: 'Super Admin (Direktur)',

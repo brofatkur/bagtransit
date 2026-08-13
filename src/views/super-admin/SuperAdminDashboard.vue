@@ -96,7 +96,7 @@ function resetPlatformData() {
               Super Admin Executive Dashboard
             </h1>
             <span class="text-xs uppercase font-bold px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-              Asa • Direktur PT Benlaris
+              Asa • Direktur PT Bonanza Tujuh Samudera (BTS)
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-400 mt-1">

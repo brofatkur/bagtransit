@@ -20,7 +20,7 @@ import Navbar from './components/Navbar.vue';
         <div class="flex items-center gap-2">
           <span class="font-display font-bold text-white">Bag<span class="text-brand-400">Transit</span></span>
           <span>•</span>
-          <span>PT Benlaris Sahabat Dewata (ASA Group)</span>
+          <span>PT Bonanza Tujuh Samudera (BTS)</span>
         </div>
         <div class="flex items-center gap-4 text-slate-500">
           <span>Ready Hubs: Kuta (Airport) & Sanur (Harbour)</span>

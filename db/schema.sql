@@ -1,7 +1,7 @@
 -- ==============================================================================
 -- BagTransit Luggage Delivery Platform (MVP) - Database Schema & RLS Policies
 -- Brand: BagTransit | "Your Bags Move. You Explore."
--- PT Benlaris Sahabat Dewata (ASA Group)
+-- PT Bonanza Tujuh Samudera (BTS)
 -- ==============================================================================
 
 -- Enable UUID extension
@@ -368,7 +368,7 @@ ON CONFLICT (cabang_id, zone_code) DO NOTHING;
 -- Seed Users
 INSERT INTO users (id, email, phone, full_name, role, cabang_id)
 VALUES
-    ('99999999-9999-9999-9999-999999999999', 'asa@asagroup.id', '+628113900100', 'Asa (Direktur PT Benlaris / ASA Group)', 'super_admin', NULL),
+    ('99999999-9999-9999-9999-999999999999', 'asa@asagroup.id', '+628113900100', 'Asa (Direktur PT Bonanza Tujuh Samudera / BTS)', 'super_admin', NULL),
     ('88888888-8888-8888-8888-888888888888', 'admin.kuta@bagtransit.id', '+628179344777', 'Budi Santoso (Admin Cabang Kuta)', 'admin', '11111111-1111-1111-1111-111111111111'),
     ('77777777-7777-7777-7777-777777777777', 'admin.sanur@bagtransit.id', '+628179344888', 'Made Aryana (Admin Cabang Sanur)', 'admin', '22222222-2222-2222-2222-222222222222')
 ON CONFLICT (email) DO NOTHING;

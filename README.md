@@ -2,7 +2,7 @@
 
 **Brand:** BagTransit
 **Tagline:** Your Bags Move. You Explore.
-**Owner:** Asa, Direktur PT Benlaris Sahabat Dewata (ASA Group)
+**Owner:** Asa, Direktur PT Bonanza Tujuh Samudera (BTS)
 **Version:** MVP 1.0.0
 
 ---
@@ -122,4 +122,4 @@ npm run build
 ---
 
 ## 📄 License & Attribution
-© 2026 **BagTransit** — PT Benlaris Sahabat Dewata (ASA Group). All rights reserved.
+© 2026 **BagTransit** — PT Bonanza Tujuh Samudera (BTS). All rights reserved.
