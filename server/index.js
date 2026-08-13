@@ -194,6 +194,11 @@ app.get('/api/notifications/logs', (req, res) => {
   res.json({ logs: notificationLog });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 BagTransit Server listening on port ${PORT}`);
-});
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`🚀 BagTransit Server listening on port ${PORT}`);
+  });
+}
+
+export default app;
+
