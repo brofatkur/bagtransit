@@ -67,7 +67,7 @@ ${booking.notes ? `📝 *Notes:* ${booking.notes}\n` : ''}🔗 *Live Tracking Li
 ${getOrigin()}/#/track?code=${code}
 
 ---------------------------------------
-_Halo Admin Bali BagMove, saya ingin konfirmasi pemesanan pengantaran koper ini._`;
+_Hello Bali BagMove Concierge, I would like to confirm my luggage delivery booking._`;
 }
 
 /**

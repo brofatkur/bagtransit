@@ -55,14 +55,14 @@ function handleLogout() {
           />
         </router-link>
 
-        <!-- Navigation Links -->
+        <!-- Navigation Links (English) -->
         <nav class="hidden md:flex items-center gap-1.5">
           <router-link
             to="/"
             class="px-4 py-2 rounded-xl text-xs font-bold transition-all"
             :class="route.path === '/' ? 'bg-brand-50 text-brand-700 border border-brand-200 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'"
           >
-            Pricelist & Kalkulator
+            Pricelist & Calculator
           </router-link>
 
           <router-link
@@ -70,7 +70,7 @@ function handleLogout() {
             class="px-4 py-2 rounded-xl text-xs font-bold transition-all"
             :class="route.path === '/track' ? 'bg-brand-50 text-brand-700 border border-brand-200 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'"
           >
-            Lacak Koper
+            Track Luggage
           </router-link>
 
           <router-link
@@ -99,7 +99,7 @@ function handleLogout() {
           
           <!-- Direct WhatsApp Header Button -->
           <a
-            :href="`https://wa.me/${MAIN_WHATSAPP}?text=${encodeURIComponent('Halo Bali BagMove, saya mau tanya layanan antar koper.')}`"
+            :href="`https://wa.me/${MAIN_WHATSAPP}?text=${encodeURIComponent('Hello Bali BagMove, I have an inquiry about luggage pickup & delivery.')}`"
             target="_blank"
             class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 transition-all active:scale-95"
           >
@@ -140,7 +140,7 @@ function handleLogout() {
             >
               <div class="px-3 py-2 border-b border-slate-100 mb-1.5">
                 <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Switch Role Mode</p>
-                <p class="text-xs text-slate-400 mt-0.5">Test role permissions live</p>
+                <p class="text-xs text-slate-400 mt-0.5">Test role permissions & isolation live</p>
               </div>
 
               <div class="space-y-1">
@@ -168,7 +168,7 @@ function handleLogout() {
 
               <div class="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between px-2 text-xs">
                 <router-link to="/login" @click="showRoleMenu = false" class="text-slate-500 hover:text-slate-800 text-[11px] font-semibold">
-                  Semua Login
+                  All Logins
                 </router-link>
                 <button @click="handleLogout" class="text-rose-600 hover:text-rose-700 flex items-center gap-1 font-semibold text-[11px]">
                   <LogOut class="w-3 h-3" />
@@ -198,7 +198,7 @@ function handleLogout() {
         class="block px-4 py-2.5 rounded-xl text-xs font-bold"
         :class="route.path === '/' ? 'bg-brand-50 text-brand-700' : 'text-slate-700'"
       >
-        Pricelist & Kalkulator
+        Pricelist & Calculator
       </router-link>
       <router-link
         to="/track"
@@ -206,7 +206,7 @@ function handleLogout() {
         class="block px-4 py-2.5 rounded-xl text-xs font-bold"
         :class="route.path === '/track' ? 'bg-brand-50 text-brand-700' : 'text-slate-700'"
       >
-        Lacak Koper
+        Track Luggage
       </router-link>
       <router-link
         v-if="isAdmin || isSuperAdmin"
@@ -230,7 +230,7 @@ function handleLogout() {
         target="_blank"
         class="block px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 text-center shadow-md shadow-emerald-600/20"
       >
-        Hubungi WhatsApp (+62 851-7249-1244)
+        WhatsApp Support (+62 851-7249-1244)
       </a>
     </div>
   </header>

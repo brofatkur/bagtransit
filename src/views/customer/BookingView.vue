@@ -40,10 +40,10 @@ const router = useRouter();
 
 // Top popular quick-select destinations
 const POPULAR_QUICK_DESTINATIONS = [
-  { no: 23, name: 'Canggu', km: 20, priceIdr: 400000, tag: '🔥 Populer' },
-  { no: 66, name: 'Seminyak', km: 10, priceIdr: 150000, tag: '🔥 Favorit' },
-  { no: 79, name: 'Ubud', km: 37, priceIdr: 370000, tag: '🌿 Populer' },
-  { no: 43, name: 'Kuta', km: 4, priceIdr: 120000, tag: '⚡ Dekat DPS' },
+  { no: 23, name: 'Canggu', km: 20, priceIdr: 400000, tag: '🔥 Popular' },
+  { no: 66, name: 'Seminyak', km: 10, priceIdr: 150000, tag: '🔥 Favorite' },
+  { no: 79, name: 'Ubud', km: 37, priceIdr: 370000, tag: '🌿 Cultural' },
+  { no: 43, name: 'Kuta', km: 4, priceIdr: 120000, tag: '⚡ Near DPS' },
   { no: 33, name: 'Nusa Dua', km: 13, priceIdr: 195000, tag: '🏖️ Resort' },
   { no: 65, name: 'Sanur', km: 21, priceIdr: 231000, tag: '⚓ Port' },
   { no: 81, name: 'Uluwatu', km: 30, priceIdr: 450000, tag: '🌅 Sunset' },
@@ -144,10 +144,10 @@ function decrementBags() {
 
 // Live recent booking activity simulation (Social proof ticker)
 const recentBookings = [
-  { name: 'Liam M.', from: 'Australia', route: 'Airport ➔ Canggu (2 Bags)', time: '4 mins ago' },
+  { name: 'Liam & Chloe M.', from: 'Australia', route: 'Airport ➔ Canggu (2 Bags)', time: '4 mins ago' },
   { name: 'Wei Zhang', from: 'Singapore', route: 'Airport ➔ Seminyak (3 Bags)', time: '11 mins ago' },
-  { name: 'Sarah J.', from: 'United Kingdom', route: 'Hotel ➔ Airport (2 Bags)', time: '19 mins ago' },
-  { name: 'Kenji S.', from: 'Japan', route: 'Sanur ➔ Ubud (2 Bags)', time: '28 mins ago' },
+  { name: 'Sarah Jenkins', from: 'United Kingdom', route: 'Hotel ➔ Airport (2 Bags)', time: '19 mins ago' },
+  { name: 'Kenji Sato', from: 'Japan', route: 'Sanur Port ➔ Ubud (2 Bags)', time: '28 mins ago' },
 ];
 const currentTickerIdx = ref(0);
 let tickerTimer = null;
@@ -184,35 +184,35 @@ const TESTIMONIALS = [
   },
   {
     name: 'Sarah Jenkins',
-    country: '🇬🇧 United Kingdom',
+    country: '🇬🇧 United Kingdom (London)',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
     route: 'Maya Sanur Resort ➔ Airport DPS',
     rating: 5,
     date: 'July 2024',
-    text: 'Had a late 10 PM flight after checkout at 11 AM. BagMove stored and delivered our bags to DPS on time. Booking via WhatsApp was super easy and fast.',
+    text: 'Had a late 10 PM flight after checkout at 11 AM. BagMove stored and delivered our bags to DPS on time. Booking via WhatsApp was super easy and took 2 mins.',
   },
 ];
 
-// FAQs
+// FAQs (English)
 const FAQS = [
   {
-    q: 'Di mana lokasi penyerahan koper di Bandara Ngurah Rai (DPS)?',
-    a: 'Tim kurir kami standby di Area Kedatangan Internasional/Domestik atau di Kuta Airport Hub kami yang hanya berjarak 100 meter dari pintu keluar bandara (Jl. Dewi Sartika 1 Utama).',
+    q: 'Where do I meet the courier at Ngurah Rai Airport (DPS)?',
+    a: 'Our courier team stands by at the Arrival Hall (International & Domestic) or at our Kuta Airport Hub located just 100 meters from the airport exit gate (Jl. Dewi Sartika 1 Utama).',
     open: true,
   },
   {
-    q: 'Apakah barang & koper saya aman selama perjalanan?',
-    a: 'Sangat aman. Setiap resleting koper dipasang Segel Pengaman Bernomor Unik (Tamper-Proof Seals) di hadapan Anda, difoto, dan dikirimkan via WhatsApp. Pengantaran menggunakan mobil van tertutup ber-AC.',
+    q: 'Is my luggage safe and secure during transit?',
+    a: '100% secure. Every zipper is sealed with a unique numbered tamper-proof security seal in front of you, photographed, and sent to your WhatsApp. All bags are transported in enclosed, air-conditioned vans.',
     open: false,
   },
   {
-    q: 'Bagaimana cara pembayarannya?',
-    a: 'Sangat fleksibel! Anda dapat membayar langsung saat serah terima (Tunai/QRIS), atau melalui transfer/e-wallet internasional saat konfirmasi via WhatsApp.',
+    q: 'How do I pay for the service?',
+    a: 'Very flexible! You can pay in cash (IDR), on-site QRIS, international card/e-wallet, or settle upon luggage handover.',
     open: false,
   },
   {
-    q: 'Berapa lama koper sampai di hotel/villa tujuan?',
-    a: 'Pengantaran normal memakan waktu 2–4 jam tergantung zona tujuan. Anda dapat menentukan jam tiba yang diinginkan saat konfirmasi di WhatsApp.',
+    q: 'How long does delivery to my hotel or villa take?',
+    a: 'Standard delivery takes 2–4 hours depending on the zone. You can also specify your preferred delivery arrival window via WhatsApp.',
     open: false,
   },
 ];
@@ -315,7 +315,7 @@ async function handleOnlinePayment() {
 <template>
   <div class="min-h-screen pb-28 pt-4 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8">
     
-    <!-- 1. HERO SECTION: Clean White / Crisp Light Theme -->
+    <!-- 1. HERO SECTION: Clean White / Crisp Light Theme (English) -->
     <div class="text-center space-y-4 max-w-2xl mx-auto pt-2">
       
       <!-- Live Social Proof Ticker Badge -->
@@ -325,19 +325,19 @@ async function handleOnlinePayment() {
           <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </span>
         <span class="text-slate-600 text-[11px]">
-          <strong class="text-slate-900">{{ recentBookings[currentTickerIdx].name }}</strong> ({{ recentBookings[currentTickerIdx].from }}) pesan {{ recentBookings[currentTickerIdx].route }} • <span class="text-emerald-600 font-bold">{{ recentBookings[currentTickerIdx].time }}</span>
+          <strong class="text-slate-900">{{ recentBookings[currentTickerIdx].name }}</strong> ({{ recentBookings[currentTickerIdx].from }}) booked {{ recentBookings[currentTickerIdx].route }} • <span class="text-emerald-600 font-bold">{{ recentBookings[currentTickerIdx].time }}</span>
         </span>
       </div>
 
       <!-- Main Headline -->
       <h1 class="text-3xl sm:text-5xl font-display font-black text-slate-900 tracking-tight leading-tight">
-        Koper Diantar ke Hotel, <br />
-        <span class="gradient-text-brand">Kamu Bebas Jelajahi Bali!</span>
+        Your Bags to the Hotel, <br />
+        <span class="gradient-text-brand">You Explore Bali Hands-Free!</span>
       </h1>
 
       <!-- Value Proposition -->
       <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
-        Layanan resmi antar & simpan koper langsung dari <strong>Bandara Ngurah Rai (DPS)</strong> ke 85 zona hotel & villa di Bali.
+        Official luggage delivery & storage direct from <strong>Ngurah Rai Airport (DPS)</strong> to 85 hotel & villa destinations across Bali.
       </p>
 
       <!-- Trust Bar (Rating + Guarantee Badges) -->
@@ -347,17 +347,17 @@ async function handleOnlinePayment() {
             <Star v-for="i in 5" :key="i" class="w-3.5 h-3.5 fill-current" />
           </div>
           <span class="font-bold text-slate-900">4.9/5</span>
-          <span class="text-slate-500">(1,480+ Turis)</span>
+          <span class="text-slate-500">(1,480+ Travelers)</span>
         </div>
 
         <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-slate-700">
           <Lock class="w-4 h-4 text-brand-600" />
-          <span class="font-medium">100% Segel Bernomor</span>
+          <span class="font-medium">100% Numbered Security Seals</span>
         </div>
 
         <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-slate-700">
           <Camera class="w-4 h-4 text-emerald-600" />
-          <span class="font-medium">Foto Bukti WhatsApp</span>
+          <span class="font-medium">WhatsApp Photo Proof</span>
         </div>
       </div>
 
@@ -374,7 +374,7 @@ async function handleOnlinePayment() {
           <div class="flex items-center justify-between">
             <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
               <span class="w-5 h-5 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-black">1</span>
-              Pilih Rute & Destinasi
+              Select Route & Destination
             </h2>
             <span class="text-xs text-brand-600 font-bold font-mono">
               {{ activeDestination.km }} km • {{ formatIdr(activeDestination.priceIdr) }}
@@ -416,7 +416,7 @@ async function handleOnlinePayment() {
 
           <!-- Quick Popular Destination Pills -->
           <div class="space-y-1.5">
-            <label class="text-[11px] font-bold text-slate-700">Destinasi Populer (1-Klik):</label>
+            <label class="text-[11px] font-bold text-slate-700">Popular Destinations (1-Click):</label>
             <div class="flex flex-wrap gap-1.5">
               <button
                 v-for="pop in POPULAR_QUICK_DESTINATIONS"
@@ -427,7 +427,7 @@ async function handleOnlinePayment() {
                 :class="selectedDestNo === pop.no ? 'bg-brand-500 text-white border-brand-500 shadow-sm shadow-brand-500/25' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'"
               >
                 <span>{{ pop.name }}</span>
-                <span class="text-[10px] opacity-80 font-mono">({{ formatIdr(pop.priceIdr).replace('Rp ', '') }})</span>
+                <span class="text-[10px] opacity-80 font-mono">({{ formatIdr(pop.priceIdr).replace('Rp ', 'IDR ') }})</span>
               </button>
             </div>
           </div>
@@ -435,9 +435,9 @@ async function handleOnlinePayment() {
           <!-- Search All 85 Destinations -->
           <div class="relative pt-1">
             <div class="flex items-center justify-between text-[11px] text-slate-600 mb-1">
-              <span>Atau cari dari total 85 lokasi di Bali:</span>
+              <span>Or search from all 85 Bali locations:</span>
               <span class="text-brand-600 font-bold cursor-pointer hover:underline" @click="isDropdownOpen = !isDropdownOpen">
-                {{ isDropdownOpen ? 'Tutup Daftar ▲' : 'Lihat Semua 85 Lokasi ▼' }}
+                {{ isDropdownOpen ? 'Close List ▲' : 'Browse All 85 Locations ▼' }}
               </span>
             </div>
 
@@ -447,7 +447,7 @@ async function handleOnlinePayment() {
                 v-model="searchQuery"
                 @focus="isDropdownOpen = true"
                 type="text"
-                placeholder="Ketik nama tempat (e.g. Bedugul, Kintamani, Lovina, Tanah Lot)..."
+                placeholder="Type location name (e.g. Bedugul, Kintamani, Lovina, Tanah Lot)..."
                 class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 focus:border-brand-500 focus:bg-white text-xs text-slate-900 placeholder-slate-400 outline-none transition-all"
               />
             </div>
@@ -483,21 +483,21 @@ async function handleOnlinePayment() {
         <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-3">
           <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
             <span class="w-5 h-5 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-black">2</span>
-            Jumlah Koper
+            Luggage Quantity
           </h2>
 
           <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-sm font-bold text-slate-900">Berapa Koper?</span>
+                <span class="text-sm font-bold text-slate-900">How many bags?</span>
                 <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold font-mono">
-                  {{ form.bag_count }} Koper
+                  {{ form.bag_count }} Bags
                 </span>
               </div>
               <p class="text-[11px] text-slate-500 mt-0.5">
-                <span class="text-emerald-700 font-bold">1–2 Koper sudah termasuk di tarif flat.</span>
+                <span class="text-emerald-700 font-bold">1–2 Bags included in the flat fare bundle.</span>
                 <span v-if="form.bag_count > 2" class="text-amber-700 font-semibold">
-                  (+{{ form.bag_count - 2 }} extra @ Rp 30.000)
+                  (+{{ form.bag_count - 2 }} extra @ IDR 30,000 / bag)
                 </span>
               </p>
             </div>
@@ -529,26 +529,26 @@ async function handleOnlinePayment() {
         <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-3.5">
           <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
             <span class="w-5 h-5 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-black">3</span>
-            Data Tamu & Jam Penjemputan
+            Traveler Details & Schedule
           </h2>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Pemesan</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Guest Full Name</label>
               <input
                 v-model="form.customer_name"
                 type="text"
-                placeholder="Contoh: Alex Lee"
+                placeholder="e.g. Alex Lee"
                 class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
 
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">Nomor WhatsApp</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">WhatsApp Phone Number</label>
               <input
                 v-model="form.customer_phone"
                 type="tel"
-                placeholder="+62 / +61 / +65..."
+                placeholder="+61 / +65 / +62..."
                 class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
@@ -557,26 +557,26 @@ async function handleOnlinePayment() {
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-[11px] font-bold text-slate-700 mb-1">
-                {{ form.route_type === 'airport_to_hotel' ? 'Flight No. (Opsional)' : 'Nama Hotel / Villa Jemput' }}
+                {{ form.route_type === 'airport_to_hotel' ? 'Flight Number (Optional)' : 'Pickup Hotel / Villa Name' }}
               </label>
               <input
                 v-if="form.route_type === 'airport_to_hotel'"
                 v-model="form.flight_number"
                 type="text"
-                placeholder="e.g. SQ 944 / GA 402"
+                placeholder="e.g. SQ 944 / GA 402 / QF 43"
                 class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
               <input
                 v-else
                 v-model="form.hotel_name"
                 type="text"
-                placeholder="Nama Hotel / Villa"
+                placeholder="Hotel / Villa Name"
                 class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
 
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">Tanggal & Jam Pickup</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Pickup Date & Time</label>
               <input
                 v-model="form.pickup_datetime"
                 type="datetime-local"
@@ -597,39 +597,39 @@ async function handleOnlinePayment() {
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2">
               <Tag class="w-4 h-4 text-brand-600" />
-              <h3 class="font-display font-bold text-sm text-slate-900">Ringkasan Biaya</h3>
+              <h3 class="font-display font-bold text-sm text-slate-900">Fare Calculation Summary</h3>
             </div>
             <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-              Tarif Flat Transparan
+              Transparent Flat Fare
             </span>
           </div>
 
           <!-- Breakdown rows -->
           <div class="space-y-2.5 text-xs text-slate-600">
             <div class="flex items-start justify-between gap-2">
-              <span class="text-slate-500">Tujuan:</span>
+              <span class="text-slate-500">Destination:</span>
               <strong class="text-slate-900 text-right font-bold">{{ activeDestination.name }}</strong>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-slate-500">Jarak Tempuh:</span>
-              <span class="font-mono text-slate-700 font-semibold">{{ activeDestination.km }} km (DPS)</span>
+              <span class="text-slate-500">Distance:</span>
+              <span class="font-mono text-slate-700 font-semibold">{{ activeDestination.km }} km from DPS Airport</span>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-slate-500">Tarif Flat (1–2 Koper):</span>
+              <span class="text-slate-500">Flat Base Fare (1–2 Bags):</span>
               <span class="font-mono font-bold text-slate-900">{{ formatIdr(fareBreakdown.baseTripPrice) }}</span>
             </div>
 
             <div v-if="fareBreakdown.extraBags > 0" class="flex items-center justify-between text-amber-700">
-              <span>Extra Koper ({{ fareBreakdown.extraBags }} × Rp 30k):</span>
+              <span>Extra Bags ({{ fareBreakdown.extraBags }} × IDR 30k):</span>
               <span class="font-mono font-bold">+{{ formatIdr(fareBreakdown.extraBagTotal) }}</span>
             </div>
 
             <!-- Total Highlight -->
             <div class="pt-3 border-t border-slate-100 space-y-2">
               <div class="flex items-baseline justify-between">
-                <span class="text-xs text-slate-500 uppercase tracking-wider font-bold">Total Pembayaran</span>
+                <span class="text-xs text-slate-500 uppercase tracking-wider font-bold">Total Payment</span>
                 <span class="text-2xl sm:text-3xl font-display font-black text-brand-600 font-mono">
                   {{ formatIdr(fareBreakdown.totalIdr) }}
                 </span>
@@ -638,7 +638,7 @@ async function handleOnlinePayment() {
               <!-- Currency Switcher Reference -->
               <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] text-slate-500 font-semibold">Valas:</span>
+                  <span class="text-[10px] text-slate-500 font-semibold">Est. FX:</span>
                   <select
                     v-model="activeCurrencyCode"
                     class="bg-white border border-slate-300 text-[10px] text-brand-700 font-bold rounded px-1.5 py-0.5 outline-none shadow-sm"
@@ -666,7 +666,7 @@ async function handleOnlinePayment() {
               class="w-full py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-display font-extrabold text-sm sm:text-base shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.01] active:scale-[0.99] group"
             >
               <MessageCircle class="w-5 h-5 fill-current group-hover:animate-bounce" />
-              <span>Pesan via WhatsApp (5 Min Respon)</span>
+              <span>Book via WhatsApp (5-Min Response)</span>
             </button>
 
             <div class="flex items-center gap-2">
@@ -677,7 +677,7 @@ async function handleOnlinePayment() {
               >
                 <Check v-if="copiedText" class="w-3.5 h-3.5 text-emerald-600" />
                 <Copy v-else class="w-3.5 h-3.5" />
-                <span>{{ copiedText ? 'Disalin!' : 'Salin Pesan' }}</span>
+                <span>{{ copiedText ? 'Copied!' : 'Copy Summary' }}</span>
               </button>
 
               <button
@@ -686,7 +686,7 @@ async function handleOnlinePayment() {
                 class="py-2 px-3 rounded-xl bg-brand-50 hover:bg-brand-100 border border-brand-200 text-brand-700 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <Zap class="w-3.5 h-3.5 text-brand-600" />
-                <span>Bayar Online</span>
+                <span>Pay Online</span>
               </button>
             </div>
           </div>
@@ -695,11 +695,11 @@ async function handleOnlinePayment() {
           <div class="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-[10px] text-slate-500">
             <div class="flex items-center gap-1">
               <CheckCircle2 class="w-3 h-3 text-emerald-600" />
-              <span>Bisa bayar saat jemput</span>
+              <span>Pay upon luggage handover</span>
             </div>
             <div class="flex items-center gap-1">
               <ShieldCheck class="w-3 h-3 text-brand-600" />
-              <span>Segel anti-bongkar</span>
+              <span>Tamper-proof seals</span>
             </div>
           </div>
 
@@ -708,7 +708,7 @@ async function handleOnlinePayment() {
         <!-- Official Contact Card -->
         <div class="bg-white rounded-2xl p-4 border border-slate-200 text-xs text-slate-600 flex items-center justify-between shadow-sm">
           <div class="space-y-0.5">
-            <span class="text-[10px] text-slate-400 uppercase font-bold">WhatsApp Customer Care</span>
+            <span class="text-[10px] text-slate-400 uppercase font-bold">WhatsApp Concierge Team</span>
             <p class="font-bold text-slate-900 text-sm">+62 851-7249-1244</p>
           </div>
           <a
@@ -730,13 +730,13 @@ async function handleOnlinePayment() {
       <div class="text-center space-y-2">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 border border-amber-200 text-amber-800 text-xs font-bold">
           <Award class="w-3.5 h-3.5 text-amber-600" />
-          <span>Pengalaman Nyata Wisatawan</span>
+          <span>Real Traveler Experiences</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-display font-bold text-slate-900">
-          Dipercaya Lebih Dari 1,400+ Wisatawan di Bali
+          Trusted by Over 1,400+ Bali Travelers
         </h2>
         <p class="text-xs sm:text-sm text-slate-500">
-          Lihat apa kata traveler yang telah menikmati liburan hands-free bersama Bali BagMove.
+          See what international tourists say about their luggage-free vacation with Bali BagMove.
         </p>
       </div>
 
@@ -770,11 +770,11 @@ async function handleOnlinePayment() {
 
     </div>
 
-    <!-- 4. FAQ ACCORDION SECTION -->
+    <!-- 4. FAQ ACCORDION SECTION (English) -->
     <div class="pt-6 space-y-4 max-w-2xl mx-auto">
       <div class="text-center space-y-1">
-        <h3 class="text-xl sm:text-2xl font-display font-bold text-slate-900">Pertanyaan Sering Ditanyakan (FAQ)</h3>
-        <p class="text-xs text-slate-500">Segala hal yang perlu kamu ketahui tentang layanan Bali BagMove</p>
+        <h3 class="text-xl sm:text-2xl font-display font-bold text-slate-900">Frequently Asked Questions (FAQ)</h3>
+        <p class="text-xs text-slate-500">Everything you need to know about Bali BagMove services</p>
       </div>
 
       <div class="space-y-2">
@@ -814,7 +814,7 @@ async function handleOnlinePayment() {
         class="py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/30 flex items-center gap-2 flex-shrink-0 active:scale-95"
       >
         <MessageCircle class="w-4 h-4 fill-current" />
-        <span>Pesan via WhatsApp</span>
+        <span>Book via WhatsApp</span>
       </button>
     </div>
 

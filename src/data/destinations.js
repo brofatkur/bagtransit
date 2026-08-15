@@ -95,15 +95,15 @@ export const BALI_DESTINATIONS = [
 ];
 
 export const DESTINATION_CATEGORIES = [
-  { id: "all", label: "Semua Tempat (85)", icon: "🗺️" },
-  { id: "popular", label: "Populer Bali", icon: "🔥" },
-  { id: "beaches", label: "Pantai (Beaches)", icon: "🏖️" },
-  { id: "temples", label: "Pura & Budaya", icon: "⛩️" },
-  { id: "waterfalls", label: "Air Terjun", icon: "🌊" },
-  { id: "mountains", label: "Gunung & Danau", icon: "🌋" },
-  { id: "harbours", label: "Pelabuhan (Fastboat)", icon: "⚓" },
-  { id: "cities", label: "Kota & Imigrasi", icon: "🏙️" },
-  { id: "attractions", label: "Atraksi & Wisata", icon: "🎡" },
+  { id: "all", label: "All Destinations (85)", icon: "🗺️" },
+  { id: "popular", label: "Popular Bali Spots", icon: "🔥" },
+  { id: "beaches", label: "Beaches", icon: "🏖️" },
+  { id: "temples", label: "Temples & Culture", icon: "⛩️" },
+  { id: "waterfalls", label: "Waterfalls", icon: "🌊" },
+  { id: "mountains", label: "Mountains & Lakes", icon: "🌋" },
+  { id: "harbours", label: "Harbours & Fastboats", icon: "⚓" },
+  { id: "cities", label: "Cities & Immigration", icon: "🏙️" },
+  { id: "attractions", label: "Attractions & Tours", icon: "🎡" },
 ];
 
 export const OFFICIAL_HUBS = [
