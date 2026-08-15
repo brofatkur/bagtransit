@@ -33,9 +33,6 @@ import {
   HelpCircle, 
   ChevronDown, 
   ChevronUp, 
-  HeartHandshake,
-  ShieldAlert,
-  Flame,
   Award
 } from 'lucide-vue-next';
 
@@ -316,56 +313,51 @@ async function handleOnlinePayment() {
 </script>
 
 <template>
-  <div class="min-h-screen pb-28 pt-3 sm:pt-6 px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8">
+  <div class="min-h-screen pb-28 pt-4 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8">
     
-    <!-- 1. HERO SECTION: Clean, High Conversion & Social Proof -->
-    <div class="text-center space-y-4 max-w-3xl mx-auto pt-2 sm:pt-4">
+    <!-- 1. HERO SECTION: Clean White / Crisp Light Theme -->
+    <div class="text-center space-y-4 max-w-2xl mx-auto pt-2">
       
       <!-- Live Social Proof Ticker Badge -->
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs shadow-inner">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs shadow-sm">
         <span class="flex h-2 w-2 relative">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </span>
-        <span class="text-slate-400 text-[11px]">
-          <strong>{{ recentBookings[currentTickerIdx].name }}</strong> ({{ recentBookings[currentTickerIdx].from }}) pesan {{ recentBookings[currentTickerIdx].route }} • <span class="text-emerald-400">{{ recentBookings[currentTickerIdx].time }}</span>
+        <span class="text-slate-600 text-[11px]">
+          <strong class="text-slate-900">{{ recentBookings[currentTickerIdx].name }}</strong> ({{ recentBookings[currentTickerIdx].from }}) pesan {{ recentBookings[currentTickerIdx].route }} • <span class="text-emerald-600 font-bold">{{ recentBookings[currentTickerIdx].time }}</span>
         </span>
       </div>
 
       <!-- Main Headline -->
-      <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
-        Koper Diantar ke Hotel, <br class="hidden sm:block" />
+      <h1 class="text-3xl sm:text-5xl font-display font-black text-slate-900 tracking-tight leading-tight">
+        Koper Diantar ke Hotel, <br />
         <span class="gradient-text-brand">Kamu Bebas Jelajahi Bali!</span>
       </h1>
 
       <!-- Value Proposition -->
-      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-        Layanan resmi pengantaran & penitipan bagasi langsung dari <strong>Bandara Ngurah Rai (DPS)</strong> ke 85 zona hotel & villa di seluruh Bali. 
+      <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
+        Layanan resmi antar & simpan koper langsung dari <strong>Bandara Ngurah Rai (DPS)</strong> ke 85 zona hotel & villa di Bali.
       </p>
 
       <!-- Trust Bar (Rating + Guarantee Badges) -->
-      <div class="pt-2 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-slate-300">
-        <div class="flex items-center gap-1.5 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800">
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-xs text-slate-600">
+        <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
           <div class="flex text-amber-400">
             <Star v-for="i in 5" :key="i" class="w-3.5 h-3.5 fill-current" />
           </div>
-          <span class="font-bold text-white">4.9/5</span>
-          <span class="text-slate-400">(1,480+ Turis)</span>
+          <span class="font-bold text-slate-900">4.9/5</span>
+          <span class="text-slate-500">(1,480+ Turis)</span>
         </div>
 
-        <div class="flex items-center gap-1.5 text-slate-300">
-          <Lock class="w-4 h-4 text-brand-400" />
-          <span>100% Segel Bernomor</span>
+        <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-slate-700">
+          <Lock class="w-4 h-4 text-brand-600" />
+          <span class="font-medium">100% Segel Bernomor</span>
         </div>
 
-        <div class="flex items-center gap-1.5 text-slate-300">
-          <Camera class="w-4 h-4 text-emerald-400" />
-          <span>Foto Bukti WhatsApp</span>
-        </div>
-
-        <div class="flex items-center gap-1.5 text-slate-300">
-          <Clock class="w-4 h-4 text-brand-400" />
-          <span>CS 24/7 Fast Response</span>
+        <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-slate-700">
+          <Camera class="w-4 h-4 text-emerald-600" />
+          <span class="font-medium">Foto Bukti WhatsApp</span>
         </div>
       </div>
 
@@ -378,92 +370,92 @@ async function handleOnlinePayment() {
       <div class="lg:col-span-7 space-y-4">
         
         <!-- STEP 1: ROUTE & DESTINATION -->
-        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
           <div class="flex items-center justify-between">
-            <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-              <span class="w-5 h-5 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-xs font-black">1</span>
+            <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-black">1</span>
               Pilih Rute & Destinasi
             </h2>
-            <span class="text-[11px] text-brand-400 font-bold font-mono">
+            <span class="text-xs text-brand-600 font-bold font-mono">
               {{ activeDestination.km }} km • {{ formatIdr(activeDestination.priceIdr) }}
             </span>
           </div>
 
           <!-- Route Segmented Control -->
-          <div class="grid grid-cols-3 gap-2 p-1 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="grid grid-cols-3 gap-2 p-1.5 rounded-2xl bg-slate-100 border border-slate-200">
             <button
               type="button"
               @click="form.route_type = 'airport_to_hotel'"
-              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1"
-              :class="form.route_type === 'airport_to_hotel' ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/25' : 'text-slate-400 hover:text-white'"
+              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5"
+              :class="form.route_type === 'airport_to_hotel' ? 'bg-white text-brand-700 shadow-sm border border-slate-200/80 font-black' : 'text-slate-600 hover:text-slate-900'"
             >
-              <Plane class="w-3.5 h-3.5" />
+              <Plane class="w-3.5 h-3.5 text-brand-600" />
               <span>Airport ➔ Hotel</span>
             </button>
 
             <button
               type="button"
               @click="form.route_type = 'hotel_to_airport'"
-              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1"
-              :class="form.route_type === 'hotel_to_airport' ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/25' : 'text-slate-400 hover:text-white'"
+              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5"
+              :class="form.route_type === 'hotel_to_airport' ? 'bg-white text-brand-700 shadow-sm border border-slate-200/80 font-black' : 'text-slate-600 hover:text-slate-900'"
             >
-              <Hotel class="w-3.5 h-3.5" />
+              <Hotel class="w-3.5 h-3.5 text-brand-600" />
               <span>Hotel ➔ Airport</span>
             </button>
 
             <button
               type="button"
               @click="form.route_type = 'hotel_to_hotel'"
-              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1"
-              :class="form.route_type === 'hotel_to_hotel' ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/25' : 'text-slate-400 hover:text-white'"
+              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5"
+              :class="form.route_type === 'hotel_to_hotel' ? 'bg-white text-brand-700 shadow-sm border border-slate-200/80 font-black' : 'text-slate-600 hover:text-slate-900'"
             >
-              <Luggage class="w-3.5 h-3.5" />
+              <Luggage class="w-3.5 h-3.5 text-brand-600" />
               <span>Hotel ➔ Hotel</span>
             </button>
           </div>
 
           <!-- Quick Popular Destination Pills -->
           <div class="space-y-1.5">
-            <label class="text-[11px] font-semibold text-slate-400">Pilihan Cepat Destinasi Populer:</label>
+            <label class="text-[11px] font-bold text-slate-700">Destinasi Populer (1-Klik):</label>
             <div class="flex flex-wrap gap-1.5">
               <button
                 v-for="pop in POPULAR_QUICK_DESTINATIONS"
                 :key="pop.no"
                 type="button"
                 @click="selectDestination(pop)"
-                class="px-3 py-1.5 rounded-xl text-xs font-medium border transition-all flex items-center gap-1.5"
-                :class="selectedDestNo === pop.no ? 'bg-brand-500/20 text-brand-300 border-brand-500 font-bold shadow-sm shadow-brand-500/20' : 'bg-slate-950/80 border-slate-800 text-slate-300 hover:border-slate-700'"
+                class="px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1"
+                :class="selectedDestNo === pop.no ? 'bg-brand-500 text-white border-brand-500 shadow-sm shadow-brand-500/25' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'"
               >
                 <span>{{ pop.name }}</span>
-                <span class="text-[10px] text-slate-400 font-mono">({{ formatIdr(pop.priceIdr).replace('Rp ', 'Rp') }})</span>
+                <span class="text-[10px] opacity-80 font-mono">({{ formatIdr(pop.priceIdr).replace('Rp ', '') }})</span>
               </button>
             </div>
           </div>
 
           <!-- Search All 85 Destinations -->
           <div class="relative pt-1">
-            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+            <div class="flex items-center justify-between text-[11px] text-slate-600 mb-1">
               <span>Atau cari dari total 85 lokasi di Bali:</span>
-              <span class="text-brand-400 font-semibold cursor-pointer hover:underline" @click="isDropdownOpen = !isDropdownOpen">
-                {{ isDropdownOpen ? 'Tutup Daftar ▲' : 'Lihat Semua 85 Tempat ▼' }}
+              <span class="text-brand-600 font-bold cursor-pointer hover:underline" @click="isDropdownOpen = !isDropdownOpen">
+                {{ isDropdownOpen ? 'Tutup Daftar ▲' : 'Lihat Semua 85 Lokasi ▼' }}
               </span>
             </div>
 
             <div class="relative">
-              <Search class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 v-model="searchQuery"
                 @focus="isDropdownOpen = true"
                 type="text"
                 placeholder="Ketik nama tempat (e.g. Bedugul, Kintamani, Lovina, Tanah Lot)..."
-                class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-950 border border-slate-800 focus:border-brand-500 text-xs text-white placeholder-slate-500 outline-none transition-colors"
+                class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 focus:border-brand-500 focus:bg-white text-xs text-slate-900 placeholder-slate-400 outline-none transition-all"
               />
             </div>
 
             <!-- Dropdown List of 85 Destinations -->
             <div
               v-if="isDropdownOpen"
-              class="absolute left-0 right-0 mt-2 p-2 rounded-2xl glass-panel bg-slate-900/98 border border-slate-700 shadow-2xl z-30 max-h-56 overflow-y-auto space-y-1"
+              class="absolute left-0 right-0 mt-2 p-2 rounded-2xl bg-white border border-slate-200 shadow-2xl z-30 max-h-56 overflow-y-auto space-y-1"
             >
               <button
                 v-for="dest in filteredDestinations"
@@ -471,15 +463,15 @@ async function handleOnlinePayment() {
                 type="button"
                 @click="selectDestination(dest)"
                 class="w-full p-2 rounded-xl text-left transition-all flex items-center justify-between text-xs group"
-                :class="selectedDestNo === dest.no ? 'bg-brand-500/20 text-brand-300 font-bold border border-brand-500/40' : 'hover:bg-slate-800/80 text-slate-300'"
+                :class="selectedDestNo === dest.no ? 'bg-brand-50 text-brand-700 font-bold border border-brand-200' : 'hover:bg-slate-50 text-slate-700'"
               >
                 <div class="flex items-center gap-2 truncate">
-                  <span class="text-[10px] font-mono text-slate-500">#{{ dest.no }}</span>
+                  <span class="text-[10px] font-mono text-slate-400">#{{ dest.no }}</span>
                   <span class="truncate">{{ dest.name }}</span>
                 </div>
                 <div class="flex items-center gap-2 flex-shrink-0 ml-2 font-mono text-[11px]">
-                  <span class="text-slate-400">{{ dest.km }}km</span>
-                  <span class="text-brand-400 font-bold">{{ formatIdr(dest.priceIdr) }}</span>
+                  <span class="text-slate-500">{{ dest.km }}km</span>
+                  <span class="text-brand-600 font-bold">{{ formatIdr(dest.priceIdr) }}</span>
                 </div>
               </button>
             </div>
@@ -488,23 +480,23 @@ async function handleOnlinePayment() {
         </div>
 
         <!-- STEP 2: LUGGAGE QUANTITY -->
-        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-3">
-          <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-xs font-black">2</span>
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-3">
+          <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-black">2</span>
             Jumlah Koper
           </h2>
 
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-sm font-bold text-white">Berapa Koper?</span>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold font-mono">
+                <span class="text-sm font-bold text-slate-900">Berapa Koper?</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold font-mono">
                   {{ form.bag_count }} Koper
                 </span>
               </div>
-              <p class="text-[11px] text-slate-400 mt-0.5">
-                <span class="text-emerald-400 font-semibold">1–2 Koper sudah termasuk di tarif flat.</span>
-                <span v-if="form.bag_count > 2" class="text-amber-300">
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                <span class="text-emerald-700 font-bold">1–2 Koper sudah termasuk di tarif flat.</span>
+                <span v-if="form.bag_count > 2" class="text-amber-700 font-semibold">
                   (+{{ form.bag_count - 2 }} extra @ Rp 30.000)
                 </span>
               </p>
@@ -515,17 +507,17 @@ async function handleOnlinePayment() {
               <button
                 type="button"
                 @click="decrementBags"
-                class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-white font-black text-lg flex items-center justify-center transition-colors active:scale-95"
+                class="w-10 h-10 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-black text-lg flex items-center justify-center transition-colors active:scale-95 shadow-sm"
               >
                 -
               </button>
-              <span class="text-lg font-black font-mono text-white w-6 text-center">
+              <span class="text-lg font-black font-mono text-slate-900 w-6 text-center">
                 {{ form.bag_count }}
               </span>
               <button
                 type="button"
                 @click="incrementBags"
-                class="w-10 h-10 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-black text-lg flex items-center justify-center transition-colors shadow-md shadow-brand-500/25 active:scale-95"
+                class="w-10 h-10 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-black text-lg flex items-center justify-center transition-colors shadow-md shadow-brand-500/25 active:scale-95"
               >
                 +
               </button>
@@ -534,37 +526,37 @@ async function handleOnlinePayment() {
         </div>
 
         <!-- STEP 3: CONTACT & SCHEDULE -->
-        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-3.5">
-          <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-xs font-black">3</span>
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-3.5">
+          <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-black">3</span>
             Data Tamu & Jam Penjemputan
           </h2>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nama Pemesan</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Pemesan</label>
               <input
                 v-model="form.customer_name"
                 type="text"
                 placeholder="Contoh: Alex Lee"
-                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
 
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nomor WhatsApp</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Nomor WhatsApp</label>
               <input
                 v-model="form.customer_phone"
                 type="tel"
                 placeholder="+62 / +61 / +65..."
-                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 mb-1">
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">
                 {{ form.route_type === 'airport_to_hotel' ? 'Flight No. (Opsional)' : 'Nama Hotel / Villa Jemput' }}
               </label>
               <input
@@ -572,23 +564,23 @@ async function handleOnlinePayment() {
                 v-model="form.flight_number"
                 type="text"
                 placeholder="e.g. SQ 944 / GA 402"
-                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
               <input
                 v-else
                 v-model="form.hotel_name"
                 type="text"
                 placeholder="Nama Hotel / Villa"
-                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
 
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Tanggal & Jam Pickup</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Tanggal & Jam Pickup</label>
               <input
                 v-model="form.pickup_datetime"
                 type="datetime-local"
-                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
           </div>
@@ -596,60 +588,60 @@ async function handleOnlinePayment() {
 
       </div>
 
-      <!-- Right Column: Live Sticky Summary & High Converting WhatsApp CTA (5 cols) -->
+      <!-- Right Column: Live Summary & WhatsApp CTA (5 cols) -->
       <div class="lg:col-span-5 space-y-4 lg:sticky lg:top-24">
         
         <!-- Live Invoice Card -->
-        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-brand-500/30 shadow-2xl space-y-4 bg-gradient-to-b from-slate-900/90 to-slate-950">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-md space-y-4">
           
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2">
-              <Tag class="w-4 h-4 text-brand-400" />
-              <h3 class="font-display font-bold text-sm text-white">Ringkasan Biaya</h3>
+              <Tag class="w-4 h-4 text-brand-600" />
+              <h3 class="font-display font-bold text-sm text-slate-900">Ringkasan Biaya</h3>
             </div>
-            <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              Tanpa Biaya Tersembunyi
+            <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+              Tarif Flat Transparan
             </span>
           </div>
 
           <!-- Breakdown rows -->
-          <div class="space-y-2 text-xs text-slate-300">
+          <div class="space-y-2.5 text-xs text-slate-600">
             <div class="flex items-start justify-between gap-2">
-              <span class="text-slate-400">Tujuan:</span>
-              <strong class="text-white text-right font-medium">{{ activeDestination.name }}</strong>
+              <span class="text-slate-500">Tujuan:</span>
+              <strong class="text-slate-900 text-right font-bold">{{ activeDestination.name }}</strong>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-slate-400">Jarak Tempuh:</span>
-              <span class="font-mono text-slate-200">{{ activeDestination.km }} km (DPS)</span>
+              <span class="text-slate-500">Jarak Tempuh:</span>
+              <span class="font-mono text-slate-700 font-semibold">{{ activeDestination.km }} km (DPS)</span>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-slate-400">Tarif Flat (1–2 Koper):</span>
-              <span class="font-mono font-bold text-white">{{ formatIdr(fareBreakdown.baseTripPrice) }}</span>
+              <span class="text-slate-500">Tarif Flat (1–2 Koper):</span>
+              <span class="font-mono font-bold text-slate-900">{{ formatIdr(fareBreakdown.baseTripPrice) }}</span>
             </div>
 
-            <div v-if="fareBreakdown.extraBags > 0" class="flex items-center justify-between text-amber-300">
+            <div v-if="fareBreakdown.extraBags > 0" class="flex items-center justify-between text-amber-700">
               <span>Extra Koper ({{ fareBreakdown.extraBags }} × Rp 30k):</span>
               <span class="font-mono font-bold">+{{ formatIdr(fareBreakdown.extraBagTotal) }}</span>
             </div>
 
             <!-- Total Highlight -->
-            <div class="pt-3 border-t border-slate-800 space-y-2">
+            <div class="pt-3 border-t border-slate-100 space-y-2">
               <div class="flex items-baseline justify-between">
-                <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Total Pembayaran</span>
-                <span class="text-2xl sm:text-3xl font-display font-black text-brand-400 font-mono">
+                <span class="text-xs text-slate-500 uppercase tracking-wider font-bold">Total Pembayaran</span>
+                <span class="text-2xl sm:text-3xl font-display font-black text-brand-600 font-mono">
                   {{ formatIdr(fareBreakdown.totalIdr) }}
                 </span>
               </div>
 
               <!-- Currency Switcher Reference -->
-              <div class="p-2 rounded-xl bg-slate-950 border border-slate-800/90 flex items-center justify-between text-xs">
+              <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] text-slate-400">Valas:</span>
+                  <span class="text-[10px] text-slate-500 font-semibold">Valas:</span>
                   <select
                     v-model="activeCurrencyCode"
-                    class="bg-slate-900 border border-slate-700 text-[10px] text-brand-300 font-bold rounded px-1.5 py-0.5 outline-none"
+                    class="bg-white border border-slate-300 text-[10px] text-brand-700 font-bold rounded px-1.5 py-0.5 outline-none shadow-sm"
                   >
                     <option value="AUD">AUD (A$)</option>
                     <option value="USD">USD ($)</option>
@@ -659,19 +651,19 @@ async function handleOnlinePayment() {
                     <option value="MYR">MYR (RM)</option>
                   </select>
                 </div>
-                <span class="font-mono font-bold text-slate-200">
+                <span class="font-mono font-bold text-slate-700">
                   ≈ {{ activeCurrencyCode }} {{ convertedForeignAmount }}
                 </span>
               </div>
             </div>
           </div>
 
-          <!-- HIGH CONVERTING PRIMARY CTA: 1-Click WhatsApp -->
+          <!-- PRIMARY CTA: 1-Click WhatsApp -->
           <div class="space-y-2 pt-1">
             <button
               type="button"
               @click="handleWhatsAppOrder"
-              class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-display font-extrabold text-sm sm:text-base shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.01] active:scale-[0.99] group"
+              class="w-full py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-display font-extrabold text-sm sm:text-base shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.01] active:scale-[0.99] group"
             >
               <MessageCircle class="w-5 h-5 fill-current group-hover:animate-bounce" />
               <span>Pesan via WhatsApp (5 Min Respon)</span>
@@ -681,9 +673,9 @@ async function handleOnlinePayment() {
               <button
                 type="button"
                 @click="handleCopyOrderText"
-                class="flex-1 py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                class="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Check v-if="copiedText" class="w-3.5 h-3.5 text-emerald-400" />
+                <Check v-if="copiedText" class="w-3.5 h-3.5 text-emerald-600" />
                 <Copy v-else class="w-3.5 h-3.5" />
                 <span>{{ copiedText ? 'Disalin!' : 'Salin Pesan' }}</span>
               </button>
@@ -691,22 +683,22 @@ async function handleOnlinePayment() {
               <button
                 type="button"
                 @click="handleOnlinePayment"
-                class="py-2 px-3 rounded-xl bg-brand-500/15 hover:bg-brand-500/25 border border-brand-500/40 text-brand-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                class="py-2 px-3 rounded-xl bg-brand-50 hover:bg-brand-100 border border-brand-200 text-brand-700 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Zap class="w-3.5 h-3.5 text-brand-400" />
+                <Zap class="w-3.5 h-3.5 text-brand-600" />
                 <span>Bayar Online</span>
               </button>
             </div>
           </div>
 
           <!-- Micro Guarantees -->
-          <div class="pt-2 border-t border-slate-800/80 grid grid-cols-2 gap-2 text-[10px] text-slate-400">
+          <div class="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-[10px] text-slate-500">
             <div class="flex items-center gap-1">
-              <CheckCircle2 class="w-3 h-3 text-emerald-400" />
+              <CheckCircle2 class="w-3 h-3 text-emerald-600" />
               <span>Bisa bayar saat jemput</span>
             </div>
             <div class="flex items-center gap-1">
-              <ShieldCheck class="w-3 h-3 text-brand-400" />
+              <ShieldCheck class="w-3 h-3 text-brand-600" />
               <span>Segel anti-bongkar</span>
             </div>
           </div>
@@ -714,15 +706,15 @@ async function handleOnlinePayment() {
         </div>
 
         <!-- Official Contact Card -->
-        <div class="glass-card rounded-2xl p-4 border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 text-xs text-slate-600 flex items-center justify-between shadow-sm">
           <div class="space-y-0.5">
             <span class="text-[10px] text-slate-400 uppercase font-bold">WhatsApp Customer Care</span>
-            <p class="font-bold text-white text-sm">+62 851-7249-1244</p>
+            <p class="font-bold text-slate-900 text-sm">+62 851-7249-1244</p>
           </div>
           <a
             :href="`https://wa.me/${MAIN_WHATSAPP}`"
             target="_blank"
-            class="px-3 py-1.5 rounded-xl bg-whatsapp-600/20 text-whatsapp-500 border border-whatsapp-500/30 text-xs font-bold hover:bg-whatsapp-600/30 transition-colors"
+            class="px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
           >
             Chat CS ➔
           </a>
@@ -733,17 +725,17 @@ async function handleOnlinePayment() {
     </div>
 
     <!-- 3. SOCIAL PROOF SECTION: Real Reviews from Tourists -->
-    <div class="pt-8 space-y-6">
+    <div class="pt-6 space-y-6">
       
       <div class="text-center space-y-2">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-bold">
-          <Award class="w-3.5 h-3.5" />
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 border border-amber-200 text-amber-800 text-xs font-bold">
+          <Award class="w-3.5 h-3.5 text-amber-600" />
           <span>Pengalaman Nyata Wisatawan</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">
+        <h2 class="text-2xl sm:text-3xl font-display font-bold text-slate-900">
           Dipercaya Lebih Dari 1,400+ Wisatawan di Bali
         </h2>
-        <p class="text-xs sm:text-sm text-slate-400">
+        <p class="text-xs sm:text-sm text-slate-500">
           Lihat apa kata traveler yang telah menikmati liburan hands-free bersama Bali BagMove.
         </p>
       </div>
@@ -753,24 +745,24 @@ async function handleOnlinePayment() {
         <div
           v-for="(t, idx) in TESTIMONIALS"
           :key="idx"
-          class="glass-card rounded-3xl p-5 border border-slate-800 flex flex-col justify-between space-y-4 hover:border-brand-500/40 transition-colors"
+          class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4 hover:border-brand-400 transition-all hover:shadow-md"
         >
           <div class="space-y-2.5">
             <!-- Stars -->
             <div class="flex text-amber-400">
               <Star v-for="s in t.rating" :key="s" class="w-4 h-4 fill-current" />
             </div>
-            <p class="text-xs text-slate-300 leading-relaxed italic">
+            <p class="text-xs text-slate-600 leading-relaxed italic">
               "{{ t.text }}"
             </p>
           </div>
 
-          <div class="flex items-center gap-3 pt-3 border-t border-slate-800/80">
-            <img :src="t.avatar" :alt="t.name" class="w-10 h-10 rounded-full object-cover border border-brand-500/30" />
+          <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+            <img :src="t.avatar" :alt="t.name" class="w-10 h-10 rounded-full object-cover border border-slate-200" />
             <div class="text-xs">
-              <h4 class="font-bold text-white">{{ t.name }}</h4>
-              <p class="text-[10px] text-slate-400">{{ t.country }}</p>
-              <p class="text-[9px] text-brand-400">{{ t.route }}</p>
+              <h4 class="font-bold text-slate-900">{{ t.name }}</h4>
+              <p class="text-[10px] text-slate-500">{{ t.country }}</p>
+              <p class="text-[9px] text-brand-600 font-semibold">{{ t.route }}</p>
             </div>
           </div>
         </div>
@@ -779,28 +771,28 @@ async function handleOnlinePayment() {
     </div>
 
     <!-- 4. FAQ ACCORDION SECTION -->
-    <div class="pt-6 space-y-4 max-w-3xl mx-auto">
+    <div class="pt-6 space-y-4 max-w-2xl mx-auto">
       <div class="text-center space-y-1">
-        <h3 class="text-xl sm:text-2xl font-display font-bold text-white">Pertanyaan Sering Ditanyakan (FAQ)</h3>
-        <p class="text-xs text-slate-400">Segala hal yang perlu kamu ketahui tentang layanan Bali BagMove</p>
+        <h3 class="text-xl sm:text-2xl font-display font-bold text-slate-900">Pertanyaan Sering Ditanyakan (FAQ)</h3>
+        <p class="text-xs text-slate-500">Segala hal yang perlu kamu ketahui tentang layanan Bali BagMove</p>
       </div>
 
       <div class="space-y-2">
         <div
           v-for="(faq, fIdx) in faqsState"
           :key="fIdx"
-          class="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all"
+          class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all"
         >
           <button
             type="button"
             @click="toggleFaq(fIdx)"
-            class="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-white hover:text-brand-300"
+            class="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-slate-900 hover:text-brand-600"
           >
             <span>{{ faq.q }}</span>
-            <ChevronUp v-if="faq.open" class="w-4 h-4 text-brand-400 flex-shrink-0" />
-            <ChevronDown v-else class="w-4 h-4 text-slate-500 flex-shrink-0" />
+            <ChevronUp v-if="faq.open" class="w-4 h-4 text-brand-600 flex-shrink-0" />
+            <ChevronDown v-else class="w-4 h-4 text-slate-400 flex-shrink-0" />
           </button>
-          <div v-if="faq.open" class="px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+          <div v-if="faq.open" class="px-4 pb-4 text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
             {{ faq.a }}
           </div>
         </div>
@@ -808,10 +800,10 @@ async function handleOnlinePayment() {
     </div>
 
     <!-- Sticky Mobile Bottom Bar for High Conversion -->
-    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 p-3 bg-slate-950/95 backdrop-blur-md border-t border-brand-500/30 flex items-center justify-between gap-3 shadow-2xl">
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 p-3 bg-white/95 backdrop-blur-md border-t border-slate-200 flex items-center justify-between gap-3 shadow-lg">
       <div class="flex flex-col">
-        <span class="text-[10px] text-slate-400">Total ({{ activeDestination.name.split('(')[0] }}):</span>
-        <span class="text-lg font-display font-black text-brand-400 font-mono">
+        <span class="text-[10px] text-slate-500">Total ({{ activeDestination.name.split('(')[0] }}):</span>
+        <span class="text-lg font-display font-black text-brand-600 font-mono">
           {{ formatIdr(fareBreakdown.totalIdr) }}
         </span>
       </div>
@@ -819,7 +811,7 @@ async function handleOnlinePayment() {
       <button
         type="button"
         @click="handleWhatsAppOrder"
-        class="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-500/30 flex items-center gap-2 flex-shrink-0"
+        class="py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/30 flex items-center gap-2 flex-shrink-0 active:scale-95"
       >
         <MessageCircle class="w-4 h-4 fill-current" />
         <span>Pesan via WhatsApp</span>

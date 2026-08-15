@@ -3,7 +3,7 @@ import Navbar from './components/Navbar.vue';
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#090E17] text-slate-100 flex flex-col selection:bg-brand-500 selection:text-slate-950">
+  <div class="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col selection:bg-brand-500 selection:text-white">
     <Navbar />
 
     <main class="flex-1">
@@ -15,19 +15,19 @@ import Navbar from './components/Navbar.vue';
     </main>
 
     <!-- Footer -->
-    <footer class="glass-panel border-t border-slate-800/80 py-8 px-4 sm:px-6 lg:px-8 mt-12">
-      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+    <footer class="bg-white border-t border-slate-200 py-8 px-4 sm:px-6 lg:px-8 mt-12 shadow-sm">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
         <div class="flex items-center gap-2">
-          <span class="font-display font-bold text-white">Bali <span class="text-brand-400">BagMove</span></span>
-          <span>•</span>
-          <span>Enjoy Bali, Luggage-Free.</span>
+          <img src="/icons/logo.png" alt="Bali BagMove" class="h-6 object-contain" />
           <span>•</span>
           <span>PT Bonanza Tujuh Samudera (BTS)</span>
         </div>
-        <div class="flex items-center gap-4 text-slate-500">
-          <span>Hubs: Kuta (Airport), Sanur (Harbour) & Seminyak</span>
+        <div class="flex items-center gap-3 text-slate-500">
+          <span>Hubs: Kuta (Airport), Sanur & Seminyak</span>
           <span>•</span>
-          <span>Hotline: +62 851-7249-1244</span>
+          <a href="https://wa.me/6285172491244" target="_blank" class="text-brand-600 font-semibold hover:underline">
+            WA: +62 851-7249-1244
+          </a>
         </div>
       </div>
     </footer>
@@ -37,12 +37,12 @@ import Navbar from './components/Navbar.vue';
 <style>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(4px);
+  transform: translateY(3px);
 }
 </style>
