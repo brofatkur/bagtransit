@@ -57,21 +57,21 @@ function handleLogout() {
         <!-- Brand Logo -->
         <router-link to="/" class="flex items-center gap-2.5 sm:gap-3 group">
           <img 
-            src="/icons/logo.webp" 
-            alt="Bali Luggage Pickup Delivery" 
-            class="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-xl shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform" 
+            src="/icons/logo.png" 
+            alt="Bali BagMove" 
+            class="h-9 sm:h-11 object-contain rounded-lg shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform" 
           />
           <div class="flex flex-col">
             <div class="flex items-center gap-1.5">
               <span class="font-display font-black text-lg sm:text-xl tracking-tight text-white">
-                Bali<span class="gradient-text-brand">Luggage</span>
+                Bali <span class="gradient-text-brand">BagMove</span>
               </span>
               <span class="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-md bg-brand-500/15 text-brand-400 border border-brand-500/30 hidden sm:inline-block">
                 DPS 85 Zones
               </span>
             </div>
             <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium tracking-wide line-clamp-1">
-              Store, Pickup & Delivery Anywhere
+              Enjoy Bali, Luggage-Free.
             </span>
           </div>
         </router-link>

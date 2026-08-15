@@ -125,7 +125,7 @@ function formatDate(isoStr) {
         Live Luggage <span class="gradient-text-brand">Tracking</span>
       </h1>
       <p class="mt-2 text-xs sm:text-sm text-slate-400">
-        Enter your BagTransit Booking Code to track real-time delivery status, courier info, and photo proof.
+        Enter your Bali BagMove Booking Code to track real-time delivery status, courier info, and photo proof.
       </p>
 
       <!-- Search Bar -->

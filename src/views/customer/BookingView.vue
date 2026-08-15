@@ -234,9 +234,9 @@ async function handleOnlinePayment() {
       
       <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
         <img 
-          src="/icons/logo.webp" 
-          alt="Bali Luggage Pickup Delivery" 
-          class="w-20 h-20 sm:w-24 sm:h-24 object-contain rounded-2xl shadow-xl shadow-brand-500/20"
+          src="/icons/logo.png" 
+          alt="Bali BagMove" 
+          class="h-16 sm:h-20 object-contain rounded-2xl shadow-xl shadow-brand-500/20"
         />
         <div class="space-y-1">
           <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-500/15 border border-brand-500/30 text-brand-400 text-[10px] font-bold uppercase tracking-wider">
@@ -244,10 +244,10 @@ async function handleOnlinePayment() {
             <span>Pricelist Resmi • 85 Destinasi Bali</span>
           </div>
           <h1 class="text-2xl sm:text-3xl font-display font-black text-white tracking-tight">
-            Bali Luggage <span class="gradient-text-brand">Pickup & Delivery</span>
+            Bali <span class="gradient-text-brand">BagMove</span>
           </h1>
           <p class="text-xs sm:text-sm text-slate-300 font-medium">
-            Store, Pickup & Delivery Anywhere • Acuan Airport Ngurah Rai (DPS)
+            Enjoy Bali, Luggage-Free. • Acuan Airport Ngurah Rai (DPS)
           </p>
           <div class="text-[11px] text-slate-400">
             PT Bonanza Tujuh Samudera (BTS) • Hub: Kuta Airport, Sanur Harbour & Seminyak

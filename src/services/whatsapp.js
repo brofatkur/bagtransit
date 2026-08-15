@@ -46,8 +46,8 @@ export function generateWhatsAppOrderMessage(booking) {
   const priceIdr = (booking.total_amount_idr || 0).toLocaleString('id-ID');
   const foreignAmount = booking.foreign_amount ? `${booking.foreign_currency} ${booking.foreign_amount}` : '';
 
-  return `*BOOKING ORDER — BALI LUGGAGE PICKUP & DELIVERY* 🧳🌴
-_PT Bonanza Tujuh Samudera (BTS) / ASA Group_
+  return `*BOOKING ORDER — BALI BAGMOVE* 🧳🌴
+_Enjoy Bali, Luggage-Free. • PT Bonanza Tujuh Samudera (BTS)_
 
 📋 *Booking Code:* \`${code}\`
 👤 *Customer Name:* ${booking.customer_name || 'Guest'}
@@ -67,7 +67,7 @@ ${booking.notes ? `📝 *Notes:* ${booking.notes}\n` : ''}🔗 *Live Tracking Li
 ${getOrigin()}/#/track?code=${code}
 
 ---------------------------------------
-_Halo Admin Bali Luggage, saya ingin konfirmasi pemesanan pengantaran koper ini._`;
+_Halo Admin Bali BagMove, saya ingin konfirmasi pemesanan pengantaran koper ini._`;
 }
 
 /**
@@ -83,7 +83,7 @@ export function getWhatsAppOrderUrl(booking, customPhone = null) {
  * WhatsApp Status Notification Templates (for Admin updates)
  */
 export const WA_TEMPLATES = {
-  confirmed: (booking) => `🎉 *Booking Confirmed!* — *Bali Luggage Pickup Delivery*
+  confirmed: (booking) => `🎉 *Booking Confirmed!* — *Bali BagMove*
 Hi *${booking.customer_name}*, your luggage delivery is confirmed!
 
 📋 *Code:* \`${booking.booking_code}\`
@@ -96,27 +96,27 @@ Hi *${booking.customer_name}*, your luggage delivery is confirmed!
 🔗 *Live Track Your Bags:*
 ${getOrigin()}/#/track?code=${booking.booking_code}
 
-_Store, Pickup & Delivery Anywhere — Bali_`,
+_Enjoy Bali, Luggage-Free. — Bali BagMove_`,
 
-  assigned: (booking, courier) => `🛵 *Courier Dispatched* — *Bali Luggage*
+  assigned: (booking, courier) => `🛵 *Courier Dispatched* — *Bali BagMove*
 Hi *${booking.customer_name}*, courier *${courier?.name || 'Wayan'}* (${courier?.vehicle_plate || 'DK 8291 AB'}) has been assigned to your booking \`${booking.booking_code}\`.
 
 Pickup Time: *${formatDateTime(booking.pickup_datetime)}*.
 Track: ${getOrigin()}/#/track?code=${booking.booking_code}`,
 
-  picked_up: (booking, courier, proofUrl) => `🧳 *Luggage Picked Up!* — *Bali Luggage*
+  picked_up: (booking, courier, proofUrl) => `🧳 *Luggage Picked Up!* — *Bali BagMove*
 Hi *${booking.customer_name}*, our courier *${courier?.name || 'Wayan'}* has safely collected your ${booking.bag_count} luggage item(s) from *${booking.pickup_location}* with tamper-proof security seals.
 
 ${proofUrl ? `📸 *Photo Proof:* ${proofUrl}\n` : ''}Your bags are in safe transit to the destination.
 Track: ${getOrigin()}/#/track?code=${booking.booking_code}`,
 
-  in_transit: (booking, courier) => `🚚 *Bags In Transit to Destination* — *Bali Luggage*
+  in_transit: (booking, courier) => `🚚 *Bags In Transit to Destination* — *Bali BagMove*
 Hi *${booking.customer_name}*, your luggage is on the way to *${booking.dropoff_location}*!
 
 Courier: *${courier?.name || 'Wayan'}* (${courier?.phone || '+62 851-7249-1244'})
 Track: ${getOrigin()}/#/track?code=${booking.booking_code}`,
 
-  delivered: (booking, proofUrl) => `✅ *Luggage Delivered Safely!* — *Bali Luggage*
+  delivered: (booking, proofUrl) => `✅ *Luggage Delivered Safely!* — *Bali BagMove*
 Hi *${booking.customer_name}*, your ${booking.bag_count} luggage item(s) have arrived safely at:
 
 📍 *Destination:* ${booking.dropoff_location}

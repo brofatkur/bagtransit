@@ -1,7 +1,7 @@
-# BagTransit — Your Bags Move. You Explore. 🧳🌴
+# Bali BagMove — Enjoy Bali, Luggage-Free. 🧳🌴
 
-**Brand:** BagTransit
-**Tagline:** Your Bags Move. You Explore.
+**Brand:** Bali BagMove
+**Tagline:** Enjoy Bali, Luggage-Free.
 **Owner:** Asa, Direktur PT Bonanza Tujuh Samudera (BTS)
 **Version:** MVP 1.0.0
 
@@ -9,7 +9,7 @@
 
 ## 🌟 Overview
 
-**BagTransit** is an end-to-end luggage delivery platform for international tourists in Bali. It enables travelers to land at I Gusti Ngurah Rai International Airport (DPS) or Sanur Harbour, hand over their suitcases, and explore Bali immediately without carrying heavy bags. Luggage is securely transported directly to hotels and villas across South Bali (Kuta, Legian, Seminyak, Canggu, Jimbaran, Nusa Dua, Sanur, Uluwatu, Ubud).
+**Bali BagMove** is an end-to-end luggage delivery platform for international tourists in Bali. It enables travelers to land at I Gusti Ngurah Rai International Airport (DPS), Sanur Harbour, or Seminyak, hand over their suitcases, and explore Bali immediately without carrying heavy bags. Luggage is securely transported directly to hotels and villas across 85 Bali destination zones (Kuta, Legian, Seminyak, Canggu, Jimbaran, Nusa Dua, Sanur, Uluwatu, Ubud, Bedugul, Kintamani, Lovina, and beyond).
 
 ### Key Highlights:
 - **Flat Bundle Pricing (FR-1):** 1–2 bags covered under a single flat base fare (`Rp 100,000`) + distance rate (`Rp 15,000/km`) + extra bag add-ons (`Rp 30,000/bag`).
@@ -122,4 +122,4 @@ npm run build
 ---
 
 ## 📄 License & Attribution
-© 2026 **BagTransit** — PT Bonanza Tujuh Samudera (BTS). All rights reserved.
+© 2026 **Bali BagMove** — PT Bonanza Tujuh Samudera (BTS). All rights reserved.

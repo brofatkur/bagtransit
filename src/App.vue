@@ -18,14 +18,16 @@ import Navbar from './components/Navbar.vue';
     <footer class="glass-panel border-t border-slate-800/80 py-8 px-4 sm:px-6 lg:px-8 mt-12">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
         <div class="flex items-center gap-2">
-          <span class="font-display font-bold text-white">Bag<span class="text-brand-400">Transit</span></span>
+          <span class="font-display font-bold text-white">Bali <span class="text-brand-400">BagMove</span></span>
+          <span>•</span>
+          <span>Enjoy Bali, Luggage-Free.</span>
           <span>•</span>
           <span>PT Bonanza Tujuh Samudera (BTS)</span>
         </div>
         <div class="flex items-center gap-4 text-slate-500">
-          <span>Ready Hubs: Kuta (Airport) & Sanur (Harbour)</span>
+          <span>Hubs: Kuta (Airport), Sanur (Harbour) & Seminyak</span>
           <span>•</span>
-          <span>Xenith Pay Direct Rail</span>
+          <span>Hotline: +62 851-7249-1244</span>
         </div>
       </div>
     </footer>
