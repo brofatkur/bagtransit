@@ -1,61 +1,97 @@
 /**
- * Pricing Engine — Single Source of Truth (FR-1)
- * BagTransit (Your Bags Move. You Explore.)
+ * Pricing Engine — Official DPS Airport & 85 Bali Destinations
+ * Bali Luggage Pickup & Delivery (PT Bonanza Tujuh Samudera / ASA Group)
  * 
  * Formula:
- * total = baseFare + (distanceKm * perKmRate) + (max(0, bagCount - includedBags) * extraBagFee)
+ * - Airport to Destination / Destination to Airport:
+ *   Base Catalog Price (covers 1-2 bags) + (max(0, bagCount - includedBags) * extraBagFee)
  */
 
+import { BALI_DESTINATIONS } from '../data/destinations.js';
+
 export const DEFAULT_RATES = {
-  baseFare: 100000,    // IDR 100,000 (Flat base covers up to 2 bags)
-  perKmRate: 15000,    // IDR 15,000 / km
-  extraBagFee: 30000,  // IDR 30,000 / extra bag (> 2 bags)
-  includedBags: 2,     // 2 bags included in base fare
+  includedBags: 2,     // 2 bags included in flat bundle
+  extraBagFee: 30000,  // Rp 30,000 per extra bag (> 2 bags)
 };
 
 /**
- * Calculate fare breakdown according to FR-1
+ * Calculate fare breakdown using official destination catalog or custom distance
  * 
  * @param {Object} params
- * @param {number} params.distanceKm - Distance in kilometers
- * @param {number} params.bagCount - Total number of luggage items (min 1)
- * @param {Object} [params.customRates] - Optional custom rates from branch/pricing_zone
- * @returns {Object} Pricing breakdown and total IDR
+ * @param {Object|number|string} params.destination - Destination object from BALI_DESTINATIONS, destination number, or distanceKm
+ * @param {number} [params.bagCount=2] - Total luggage items (min 1)
+ * @param {number} [params.extraBagFee=30000] - Extra bag fee per item
+ * @param {string} [params.routeType='airport_to_hotel'] - Route type
+ * @returns {Object} Complete calculation breakdown in IDR
  */
-export function calculateFare({ distanceKm = 0, bagCount = 1, customRates = null }) {
-  const rates = {
-    baseFare: Number(customRates?.baseFare ?? customRates?.base_fare ?? DEFAULT_RATES.baseFare),
-    perKmRate: Number(customRates?.perKmRate ?? customRates?.per_km_rate ?? DEFAULT_RATES.perKmRate),
-    extraBagFee: Number(customRates?.extraBagFee ?? customRates?.extra_bag_fee ?? DEFAULT_RATES.extraBagFee),
-    includedBags: Number(customRates?.includedBags ?? customRates?.included_bags ?? DEFAULT_RATES.includedBags),
-  };
-
+export function calculateFare({
+  destination = null,
+  distanceKm = null,
+  bagCount = 2,
+  extraBagFee = 30000,
+  includedBags = 2,
+  routeType = 'airport_to_hotel',
+  customBasePrice = null,
+}) {
   const validBagCount = Math.max(1, parseInt(bagCount) || 1);
-  const validDistanceKm = Math.max(0, parseFloat(distanceKm) || 0);
+  const extraBags = Math.max(0, validBagCount - includedBags);
+  const extraBagTotal = extraBags * extraBagFee;
 
-  const extraBags = Math.max(0, validBagCount - rates.includedBags);
-  const distanceFare = Math.round(validDistanceKm * rates.perKmRate);
-  const extraBagFareTotal = Math.round(extraBags * rates.extraBagFee);
-  const totalIdr = Math.round(rates.baseFare + distanceFare + extraBagFareTotal);
+  let matchedDest = null;
+  if (typeof destination === 'object' && destination?.priceIdr) {
+    matchedDest = destination;
+  } else if (typeof destination === 'number') {
+    matchedDest = BALI_DESTINATIONS.find(d => d.no === destination);
+  } else if (typeof destination === 'string') {
+    matchedDest = BALI_DESTINATIONS.find(d => d.name.toLowerCase() === destination.toLowerCase())
+      || BALI_DESTINATIONS.find(d => d.name.toLowerCase().includes(destination.toLowerCase()));
+  }
+
+  let baseTripPrice = 0;
+  let km = 0;
+  let destinationName = '';
+
+  if (matchedDest) {
+    baseTripPrice = matchedDest.priceIdr;
+    km = matchedDest.km;
+    destinationName = matchedDest.name;
+  } else if (customBasePrice != null && Number(customBasePrice) > 0) {
+    baseTripPrice = Number(customBasePrice);
+    km = parseFloat(distanceKm) || 10;
+    destinationName = 'Custom Destination';
+  } else if (distanceKm != null) {
+    km = Math.max(1, parseFloat(distanceKm) || 10);
+    // Linear fallback
+    baseTripPrice = Math.max(100000, Math.round(100000 + (km * 10000)));
+    destinationName = `Distance ${km} km`;
+  } else {
+    // Default to Kuta / Airport area
+    const defaultDest = BALI_DESTINATIONS.find(d => d.no === 43) || BALI_DESTINATIONS[0];
+    baseTripPrice = defaultDest.priceIdr;
+    km = defaultDest.km;
+    destinationName = defaultDest.name;
+  }
+
+  const totalIdr = baseTripPrice + extraBagTotal;
 
   return {
-    baseFare: rates.baseFare,
-    perKmRate: rates.perKmRate,
-    distanceKm: validDistanceKm,
-    distanceFare,
-    extraBags,
-    includedBags: rates.includedBags,
-    extraBagFee: rates.extraBagFee,
-    extraBagFareTotal,
-    totalIdr,
+    destinationName,
+    km,
+    baseTripPrice,
+    includedBags,
     bagCount: validBagCount,
+    extraBags,
+    extraBagFee,
+    extraBagTotal,
+    totalIdr,
+    routeType,
   };
 }
 
 /**
  * Format number to IDR currency string
  * @param {number} amount
- * @returns {string} e.g. "Rp 190.000"
+ * @returns {string} e.g. "Rp 120.000"
  */
 export function formatIdr(amount) {
   if (amount == null || isNaN(amount)) return 'Rp 0';
