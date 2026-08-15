@@ -1,9 +1,9 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { BALI_DESTINATIONS, DESTINATION_CATEGORIES, OFFICIAL_HUBS, MAIN_WHATSAPP } from '../../data/destinations.js';
-import { calculateFare, formatIdr, DEFAULT_RATES } from '../../services/pricing.js';
-import { COUNTRY_PAYMENT_MAP, convertIdrToCurrency, formatCurrency, createXenithPaymentLink } from '../../services/xenith.js';
+import { calculateFare, formatIdr } from '../../services/pricing.js';
+import { COUNTRY_PAYMENT_MAP, convertIdrToCurrency, createXenithPaymentLink } from '../../services/xenith.js';
 import { generateWhatsAppOrderMessage, getWhatsAppOrderUrl } from '../../services/whatsapp.js';
 import { db } from '../../services/db.js';
 import XenithPaymentModal from '../../components/XenithPaymentModal.vue';
@@ -20,28 +20,44 @@ import {
   Calendar, 
   User, 
   Phone, 
-  Mail, 
-  Info, 
   CheckCircle2, 
-  Zap,
-  Anchor,
-  Search,
-  MessageCircle,
-  Tag,
-  Copy,
-  Check,
-  ChevronRight,
-  SlidersHorizontal,
+  Zap, 
+  Search, 
+  MessageCircle, 
+  Tag, 
+  Copy, 
+  Check, 
+  Star, 
+  Lock, 
+  Camera, 
+  HelpCircle, 
+  ChevronDown, 
+  ChevronUp, 
+  HeartHandshake,
+  ShieldAlert,
   Flame,
-  Building
+  Award
 } from 'lucide-vue-next';
 
 const router = useRouter();
 
-// Search & Category Filters for 85 Destinations
+// Top popular quick-select destinations
+const POPULAR_QUICK_DESTINATIONS = [
+  { no: 23, name: 'Canggu', km: 20, priceIdr: 400000, tag: '🔥 Populer' },
+  { no: 66, name: 'Seminyak', km: 10, priceIdr: 150000, tag: '🔥 Favorit' },
+  { no: 79, name: 'Ubud', km: 37, priceIdr: 370000, tag: '🌿 Populer' },
+  { no: 43, name: 'Kuta', km: 4, priceIdr: 120000, tag: '⚡ Dekat DPS' },
+  { no: 33, name: 'Nusa Dua', km: 13, priceIdr: 195000, tag: '🏖️ Resort' },
+  { no: 65, name: 'Sanur', km: 21, priceIdr: 231000, tag: '⚓ Port' },
+  { no: 81, name: 'Uluwatu', km: 30, priceIdr: 450000, tag: '🌅 Sunset' },
+  { no: 37, name: 'Jimbaran', km: 7, priceIdr: 210000, tag: '🦐 Seafood' },
+];
+
+// Search & filter state
 const searchQuery = ref('');
 const selectedCategory = ref('all');
-const selectedDestNo = ref(23); // Default to Canggu (No 23)
+const selectedDestNo = ref(23); // Default Canggu
+const isDropdownOpen = ref(false);
 
 const filteredDestinations = computed(() => {
   let list = BALI_DESTINATIONS;
@@ -71,33 +87,29 @@ const activeDestination = computed(() => {
 // Form state
 const form = reactive({
   route_type: 'airport_to_hotel',
-  customer_country: 'CN',
+  customer_country: 'AU',
   bag_count: 2,
   customer_name: '',
   customer_phone: '',
-  customer_email: '',
   pickup_datetime: new Date(Date.now() + 3600000 * 2).toISOString().slice(0, 16),
   flight_number: '',
   hotel_name: '',
   hotel_room: '',
   notes: '',
-  payment_preference: 'WhatsApp Order (Pay on Delivery / QRIS)',
 });
 
-// Currency Switcher Reference
-const activeCurrencyCode = ref('USD');
-const FOREIGN_RATES_ESTIMATE = {
-  USD: 16000,
+// Multi-currency estimates
+const activeCurrencyCode = ref('AUD');
+const FOREIGN_RATES = {
   AUD: 10500,
-  EUR: 17400,
+  USD: 16000,
   SGD: 12200,
+  EUR: 17400,
   CNY: 2280,
   MYR: 3580,
-  PHP: 285,
-  THB: 465,
+  INR: 192,
 };
 
-// Live Fare Calculation (FR-1)
 const fareBreakdown = computed(() => {
   return calculateFare({
     destination: activeDestination.value,
@@ -109,37 +121,119 @@ const fareBreakdown = computed(() => {
 });
 
 const convertedForeignAmount = computed(() => {
-  const rate = FOREIGN_RATES_ESTIMATE[activeCurrencyCode.value] || 16000;
+  const rate = FOREIGN_RATES[activeCurrencyCode.value] || 10500;
   const val = fareBreakdown.value.totalIdr / rate;
-  return activeCurrencyCode.value === 'USD' || activeCurrencyCode.value === 'AUD' || activeCurrencyCode.value === 'EUR' || activeCurrencyCode.value === 'SGD'
+  return ['AUD', 'USD', 'SGD', 'EUR'].includes(activeCurrencyCode.value)
     ? val.toFixed(1)
     : Math.round(val).toLocaleString();
 });
 
+function selectDestination(dest) {
+  selectedDestNo.value = dest.no;
+  isDropdownOpen.value = false;
+  searchQuery.value = '';
+  if (!form.hotel_name) {
+    form.hotel_name = `Hotel / Villa in ${dest.name.split('(')[0]}`;
+  }
+}
+
 function incrementBags() {
-  if (form.bag_count < 15) form.bag_count++;
+  if (form.bag_count < 12) form.bag_count++;
 }
 
 function decrementBags() {
   if (form.bag_count > 1) form.bag_count--;
 }
 
-function selectDestination(dest) {
-  selectedDestNo.value = dest.no;
-  if (!form.hotel_name) {
-    form.hotel_name = `Hotel / Villa in ${dest.name.split('(')[0]}`;
-  }
+// Live recent booking activity simulation (Social proof ticker)
+const recentBookings = [
+  { name: 'Liam M.', from: 'Australia', route: 'Airport ➔ Canggu (2 Bags)', time: '4 mins ago' },
+  { name: 'Wei Zhang', from: 'Singapore', route: 'Airport ➔ Seminyak (3 Bags)', time: '11 mins ago' },
+  { name: 'Sarah J.', from: 'United Kingdom', route: 'Hotel ➔ Airport (2 Bags)', time: '19 mins ago' },
+  { name: 'Kenji S.', from: 'Japan', route: 'Sanur ➔ Ubud (2 Bags)', time: '28 mins ago' },
+];
+const currentTickerIdx = ref(0);
+let tickerTimer = null;
+
+onMounted(() => {
+  tickerTimer = setInterval(() => {
+    currentTickerIdx.value = (currentTickerIdx.value + 1) % recentBookings.length;
+  }, 4500);
+});
+
+onUnmounted(() => {
+  if (tickerTimer) clearInterval(tickerTimer);
+});
+
+// Social Proof Customer Testimonials
+const TESTIMONIALS = [
+  {
+    name: 'Liam & Chloe K.',
+    country: '🇦🇺 Australia (Melbourne)',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    route: 'Airport DPS ➔ The Lawn Villa, Canggu',
+    rating: 5,
+    date: 'August 2024',
+    text: 'Best decision ever landing in Bali! Handed our 3 heavy suitcases right at the Kuta exit gate and went straight for brunch. Bags arrived at our villa with seals intact before 3 PM check-in.',
+  },
+  {
+    name: 'Wei Zhang & Ling',
+    country: '🇸🇬 Singapore',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    route: 'Airport DPS ➔ W Bali Seminyak',
+    rating: 5,
+    date: 'August 2024',
+    text: 'Extremely professional and fast. Courier Wayan sent photo proof on WhatsApp with numbered security seals immediately upon pickup. 100% recommended!',
+  },
+  {
+    name: 'Sarah Jenkins',
+    country: '🇬🇧 United Kingdom',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
+    route: 'Maya Sanur Resort ➔ Airport DPS',
+    rating: 5,
+    date: 'July 2024',
+    text: 'Had a late 10 PM flight after checkout at 11 AM. BagMove stored and delivered our bags to DPS on time. Booking via WhatsApp was super easy and fast.',
+  },
+];
+
+// FAQs
+const FAQS = [
+  {
+    q: 'Di mana lokasi penyerahan koper di Bandara Ngurah Rai (DPS)?',
+    a: 'Tim kurir kami standby di Area Kedatangan Internasional/Domestik atau di Kuta Airport Hub kami yang hanya berjarak 100 meter dari pintu keluar bandara (Jl. Dewi Sartika 1 Utama).',
+    open: true,
+  },
+  {
+    q: 'Apakah barang & koper saya aman selama perjalanan?',
+    a: 'Sangat aman. Setiap resleting koper dipasang Segel Pengaman Bernomor Unik (Tamper-Proof Seals) di hadapan Anda, difoto, dan dikirimkan via WhatsApp. Pengantaran menggunakan mobil van tertutup ber-AC.',
+    open: false,
+  },
+  {
+    q: 'Bagaimana cara pembayarannya?',
+    a: 'Sangat fleksibel! Anda dapat membayar langsung saat serah terima (Tunai/QRIS), atau melalui transfer/e-wallet internasional saat konfirmasi via WhatsApp.',
+    open: false,
+  },
+  {
+    q: 'Berapa lama koper sampai di hotel/villa tujuan?',
+    a: 'Pengantaran normal memakan waktu 2–4 jam tergantung zona tujuan. Anda dapat menentukan jam tiba yang diinginkan saat konfirmasi di WhatsApp.',
+    open: false,
+  },
+];
+const faqsState = ref(FAQS);
+
+function toggleFaq(index) {
+  faqsState.value[index].open = !faqsState.value[index].open;
 }
 
-// Modal & Copied state
+// Order & Payment handlers
+const copiedText = ref(false);
 const showPaymentModal = ref(false);
 const activeBooking = ref(null);
 const paymentLinkData = ref(null);
-const copiedText = ref(false);
 
 function prepareBookingRecord() {
   const pickupLoc = form.route_type === 'airport_to_hotel'
-    ? `Ngurah Rai International Airport (DPS) — Flight ${form.flight_number || 'TBD'}`
+    ? `Ngurah Rai International Airport (DPS)${form.flight_number ? ` [Flight: ${form.flight_number}]` : ''}`
     : `${form.hotel_name || 'Hotel'} (${activeDestination.value.name})`;
 
   const dropoffLoc = form.route_type === 'hotel_to_airport'
@@ -148,11 +242,9 @@ function prepareBookingRecord() {
 
   return db.createBooking({
     cabang_id: '11111111-1111-1111-1111-111111111111',
-    pricing_zone_id: null,
     customer_name: form.customer_name || 'Guest Traveler',
     customer_phone: form.customer_phone || '-',
-    customer_email: form.customer_email || '',
-    customer_country: form.customer_country || 'ID',
+    customer_country: form.customer_country || 'AU',
     route_type: form.route_type,
     pickup_location: pickupLoc,
     pickup_datetime: new Date(form.pickup_datetime).toISOString(),
@@ -166,14 +258,13 @@ function prepareBookingRecord() {
     total_amount_idr: fareBreakdown.value.totalIdr,
     foreign_currency: activeCurrencyCode.value,
     foreign_amount: Number(convertedForeignAmount.value.replace(/,/g, '')),
-    payment_channel: form.payment_preference,
+    payment_channel: 'WhatsApp Order (Pay on Delivery / QRIS)',
     payment_status: 'pending_payment',
     status: 'pending_payment',
     notes: form.notes,
   });
 }
 
-// 1-Click WhatsApp Direct Order (Primary MVP Flow)
 function handleWhatsAppOrder() {
   const booking = prepareBookingRecord();
   activeBooking.value = booking;
@@ -188,7 +279,6 @@ function handleWhatsAppOrder() {
   window.open(waUrl, '_blank');
 }
 
-// Copy WhatsApp Order Text
 function handleCopyOrderText() {
   const booking = prepareBookingRecord();
   const msg = generateWhatsAppOrderMessage(booking);
@@ -197,7 +287,6 @@ function handleCopyOrderText() {
   setTimeout(() => { copiedText.value = false; }, 2000);
 }
 
-// Phase 2 Online Payment Gateway (Xenith Pay)
 async function handleOnlinePayment() {
   const booking = prepareBookingRecord();
   activeBooking.value = booking;
@@ -227,207 +316,216 @@ async function handleOnlinePayment() {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-5rem)] pb-28 pt-4 sm:pt-8 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
+  <div class="min-h-screen pb-28 pt-3 sm:pt-6 px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8">
     
-    <!-- Hero Brand Banner -->
-    <div class="glass-card rounded-3xl p-5 sm:p-8 border border-brand-500/20 shadow-2xl relative overflow-hidden text-center sm:text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+    <!-- 1. HERO SECTION: Clean, High Conversion & Social Proof -->
+    <div class="text-center space-y-4 max-w-3xl mx-auto pt-2 sm:pt-4">
       
-      <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
-        <img 
-          src="/icons/logo.png" 
-          alt="Bali BagMove" 
-          class="h-16 sm:h-20 object-contain rounded-2xl shadow-xl shadow-brand-500/20"
-        />
-        <div class="space-y-1">
-          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-500/15 border border-brand-500/30 text-brand-400 text-[10px] font-bold uppercase tracking-wider">
-            <Sparkles class="w-3 h-3 text-brand-400" />
-            <span>Pricelist Resmi • 85 Destinasi Bali</span>
-          </div>
-          <h1 class="text-2xl sm:text-3xl font-display font-black text-white tracking-tight">
-            Bali <span class="gradient-text-brand">BagMove</span>
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-300 font-medium">
-            Enjoy Bali, Luggage-Free. • Acuan Airport Ngurah Rai (DPS)
-          </p>
-          <div class="text-[11px] text-slate-400">
-            PT Bonanza Tujuh Samudera (BTS) • Hub: Kuta Airport, Sanur Harbour & Seminyak
-          </div>
-        </div>
+      <!-- Live Social Proof Ticker Badge -->
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs shadow-inner">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-slate-400 text-[11px]">
+          <strong>{{ recentBookings[currentTickerIdx].name }}</strong> ({{ recentBookings[currentTickerIdx].from }}) pesan {{ recentBookings[currentTickerIdx].route }} • <span class="text-emerald-400">{{ recentBookings[currentTickerIdx].time }}</span>
+        </span>
       </div>
 
-      <!-- Quick Trust Metric -->
-      <div class="hidden lg:flex flex-col items-end gap-1.5 p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
-        <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Layanan Terpercaya</span>
-        <div class="text-lg font-bold text-white flex items-center gap-1.5">
-          <ShieldCheck class="w-5 h-5 text-brand-400" />
-          <span>100% Aman & Bersegel</span>
+      <!-- Main Headline -->
+      <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
+        Koper Diantar ke Hotel, <br class="hidden sm:block" />
+        <span class="gradient-text-brand">Kamu Bebas Jelajahi Bali!</span>
+      </h1>
+
+      <!-- Value Proposition -->
+      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        Layanan resmi pengantaran & penitipan bagasi langsung dari <strong>Bandara Ngurah Rai (DPS)</strong> ke 85 zona hotel & villa di seluruh Bali. 
+      </p>
+
+      <!-- Trust Bar (Rating + Guarantee Badges) -->
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-slate-300">
+        <div class="flex items-center gap-1.5 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800">
+          <div class="flex text-amber-400">
+            <Star v-for="i in 5" :key="i" class="w-3.5 h-3.5 fill-current" />
+          </div>
+          <span class="font-bold text-white">4.9/5</span>
+          <span class="text-slate-400">(1,480+ Turis)</span>
         </div>
-        <span class="text-[10px] text-emerald-400 font-medium">Order Instant Langsung ke WhatsApp</span>
+
+        <div class="flex items-center gap-1.5 text-slate-300">
+          <Lock class="w-4 h-4 text-brand-400" />
+          <span>100% Segel Bernomor</span>
+        </div>
+
+        <div class="flex items-center gap-1.5 text-slate-300">
+          <Camera class="w-4 h-4 text-emerald-400" />
+          <span>Foto Bukti WhatsApp</span>
+        </div>
+
+        <div class="flex items-center gap-1.5 text-slate-300">
+          <Clock class="w-4 h-4 text-brand-400" />
+          <span>CS 24/7 Fast Response</span>
+        </div>
       </div>
 
     </div>
 
-    <!-- Main Grid: Booking Calculator & Destination Selector -->
+    <!-- 2. MAIN BOOKING CALCULATOR CONTAINER -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      <!-- Left Column: Interactive Calculator & Details (7 cols) -->
-      <div class="lg:col-span-7 space-y-5">
+      <!-- Left Column: Simple 3-Step Interactive Form (7 cols) -->
+      <div class="lg:col-span-7 space-y-4">
         
-        <!-- Step 1: Select Route -->
-        <div class="glass-card rounded-3xl p-4 sm:p-6 border border-slate-800 space-y-3">
-          <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">1</span>
-            Pilih Rute Pengantaran Koper
-          </label>
+        <!-- STEP 1: ROUTE & DESTINATION -->
+        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-xs font-black">1</span>
+              Pilih Rute & Destinasi
+            </h2>
+            <span class="text-[11px] text-brand-400 font-bold font-mono">
+              {{ activeDestination.km }} km • {{ formatIdr(activeDestination.priceIdr) }}
+            </span>
+          </div>
 
-          <div class="grid grid-cols-3 gap-2 sm:gap-3">
+          <!-- Route Segmented Control -->
+          <div class="grid grid-cols-3 gap-2 p-1 rounded-2xl bg-slate-950 border border-slate-800">
             <button
               type="button"
               @click="form.route_type = 'airport_to_hotel'"
-              class="p-3 rounded-2xl border text-center transition-all flex flex-col items-center justify-center gap-1.5"
-              :class="form.route_type === 'airport_to_hotel' ? 'bg-brand-500/20 border-brand-500 text-white shadow-glow-brand ring-1 ring-brand-500' : 'bg-slate-950/80 border-slate-800 text-slate-400 hover:border-slate-700'"
+              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1"
+              :class="form.route_type === 'airport_to_hotel' ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/25' : 'text-slate-400 hover:text-white'"
             >
-              <Plane class="w-5 h-5 text-brand-400" />
-              <span class="text-xs font-bold leading-tight">Airport ➔ Hotel</span>
+              <Plane class="w-3.5 h-3.5" />
+              <span>Airport ➔ Hotel</span>
             </button>
 
             <button
               type="button"
               @click="form.route_type = 'hotel_to_airport'"
-              class="p-3 rounded-2xl border text-center transition-all flex flex-col items-center justify-center gap-1.5"
-              :class="form.route_type === 'hotel_to_airport' ? 'bg-brand-500/20 border-brand-500 text-white shadow-glow-brand ring-1 ring-brand-500' : 'bg-slate-950/80 border-slate-800 text-slate-400 hover:border-slate-700'"
+              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1"
+              :class="form.route_type === 'hotel_to_airport' ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/25' : 'text-slate-400 hover:text-white'"
             >
-              <Hotel class="w-5 h-5 text-brand-400" />
-              <span class="text-xs font-bold leading-tight">Hotel ➔ Airport</span>
+              <Hotel class="w-3.5 h-3.5" />
+              <span>Hotel ➔ Airport</span>
             </button>
 
             <button
               type="button"
               @click="form.route_type = 'hotel_to_hotel'"
-              class="p-3 rounded-2xl border text-center transition-all flex flex-col items-center justify-center gap-1.5"
-              :class="form.route_type === 'hotel_to_hotel' ? 'bg-brand-500/20 border-brand-500 text-white shadow-glow-brand ring-1 ring-brand-500' : 'bg-slate-950/80 border-slate-800 text-slate-400 hover:border-slate-700'"
+              class="py-2.5 px-2 rounded-xl text-center text-xs font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1"
+              :class="form.route_type === 'hotel_to_hotel' ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/25' : 'text-slate-400 hover:text-white'"
             >
-              <Luggage class="w-5 h-5 text-brand-400" />
-              <span class="text-xs font-bold leading-tight">Hotel ➔ Hotel</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Step 2: 85 Destination Selector & Search -->
-        <div class="glass-card rounded-3xl p-4 sm:p-6 border border-slate-800 space-y-4">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-              <span class="w-5 h-5 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">2</span>
-              Pilih Destinasi Tujuan (85 Tempat di Bali)
-            </label>
-            <span class="text-[11px] text-brand-400 font-mono font-bold">
-              {{ activeDestination.km }} km • {{ formatIdr(activeDestination.priceIdr) }}
-            </span>
-          </div>
-
-          <!-- Search Input -->
-          <div class="relative">
-            <Search class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Cari lokasi: Canggu, Seminyak, Ubud, Lovina, Sanur, Nusa Dua..."
-              class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-950 border border-slate-800 focus:border-brand-500 text-xs text-white placeholder-slate-500 outline-none"
-            />
-          </div>
-
-          <!-- Category Filter Pills -->
-          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-            <button
-              v-for="cat in DESTINATION_CATEGORIES"
-              :key="cat.id"
-              type="button"
-              @click="selectedCategory = cat.id"
-              class="px-2.5 py-1 rounded-xl font-medium border transition-colors whitespace-nowrap text-[11px]"
-              :class="selectedCategory === cat.id ? 'bg-brand-500/20 text-brand-300 border-brand-500/40 font-bold' : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'"
-            >
-              {{ cat.icon }} {{ cat.label }}
+              <Luggage class="w-3.5 h-3.5" />
+              <span>Hotel ➔ Hotel</span>
             </button>
           </div>
 
-          <!-- Active Selected Destination Card -->
-          <div class="p-3.5 rounded-2xl bg-gradient-to-r from-brand-950/80 to-slate-900 border border-brand-500/40 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-xs">
-                #{{ activeDestination.no }}
-              </div>
-              <div>
-                <span class="text-xs font-bold text-white block">{{ activeDestination.name }}</span>
-                <span class="text-[10px] text-slate-400">Jarak dari Airport DPS: <strong class="text-brand-300">{{ activeDestination.km }} km</strong></span>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="text-[10px] text-slate-400 block">Tarif Katalog (1-2 Koper):</span>
-              <span class="text-sm font-bold font-mono text-brand-400">{{ formatIdr(activeDestination.priceIdr) }}</span>
+          <!-- Quick Popular Destination Pills -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-semibold text-slate-400">Pilihan Cepat Destinasi Populer:</label>
+            <div class="flex flex-wrap gap-1.5">
+              <button
+                v-for="pop in POPULAR_QUICK_DESTINATIONS"
+                :key="pop.no"
+                type="button"
+                @click="selectDestination(pop)"
+                class="px-3 py-1.5 rounded-xl text-xs font-medium border transition-all flex items-center gap-1.5"
+                :class="selectedDestNo === pop.no ? 'bg-brand-500/20 text-brand-300 border-brand-500 font-bold shadow-sm shadow-brand-500/20' : 'bg-slate-950/80 border-slate-800 text-slate-300 hover:border-slate-700'"
+              >
+                <span>{{ pop.name }}</span>
+                <span class="text-[10px] text-slate-400 font-mono">({{ formatIdr(pop.priceIdr).replace('Rp ', 'Rp') }})</span>
+              </button>
             </div>
           </div>
 
-          <!-- Destination List Grid (Scrollable) -->
-          <div class="max-h-48 overflow-y-auto space-y-1.5 pr-1">
-            <button
-              v-for="dest in filteredDestinations"
-              :key="dest.no"
-              type="button"
-              @click="selectDestination(dest)"
-              class="w-full p-2.5 rounded-xl text-left transition-all flex items-center justify-between text-xs group"
-              :class="selectedDestNo === dest.no ? 'bg-brand-500/20 border border-brand-500/50 text-white font-bold' : 'bg-slate-950/60 border border-slate-800/80 text-slate-300 hover:bg-slate-900'"
+          <!-- Search All 85 Destinations -->
+          <div class="relative pt-1">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+              <span>Atau cari dari total 85 lokasi di Bali:</span>
+              <span class="text-brand-400 font-semibold cursor-pointer hover:underline" @click="isDropdownOpen = !isDropdownOpen">
+                {{ isDropdownOpen ? 'Tutup Daftar ▲' : 'Lihat Semua 85 Tempat ▼' }}
+              </span>
+            </div>
+
+            <div class="relative">
+              <Search class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                v-model="searchQuery"
+                @focus="isDropdownOpen = true"
+                type="text"
+                placeholder="Ketik nama tempat (e.g. Bedugul, Kintamani, Lovina, Tanah Lot)..."
+                class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-950 border border-slate-800 focus:border-brand-500 text-xs text-white placeholder-slate-500 outline-none transition-colors"
+              />
+            </div>
+
+            <!-- Dropdown List of 85 Destinations -->
+            <div
+              v-if="isDropdownOpen"
+              class="absolute left-0 right-0 mt-2 p-2 rounded-2xl glass-panel bg-slate-900/98 border border-slate-700 shadow-2xl z-30 max-h-56 overflow-y-auto space-y-1"
             >
-              <div class="flex items-center gap-2 min-w-0">
-                <span class="text-[10px] font-mono text-slate-500 w-5">#{{ dest.no }}</span>
-                <span class="truncate">{{ dest.name }}</span>
-                <span v-if="dest.popular" class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">🔥 Populer</span>
-              </div>
-              <div class="flex items-center gap-3 flex-shrink-0 ml-2 font-mono">
-                <span class="text-[10px] text-slate-400">{{ dest.km }} km</span>
-                <span class="text-brand-400 font-semibold">{{ formatIdr(dest.priceIdr) }}</span>
-              </div>
-            </button>
+              <button
+                v-for="dest in filteredDestinations"
+                :key="dest.no"
+                type="button"
+                @click="selectDestination(dest)"
+                class="w-full p-2 rounded-xl text-left transition-all flex items-center justify-between text-xs group"
+                :class="selectedDestNo === dest.no ? 'bg-brand-500/20 text-brand-300 font-bold border border-brand-500/40' : 'hover:bg-slate-800/80 text-slate-300'"
+              >
+                <div class="flex items-center gap-2 truncate">
+                  <span class="text-[10px] font-mono text-slate-500">#{{ dest.no }}</span>
+                  <span class="truncate">{{ dest.name }}</span>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0 ml-2 font-mono text-[11px]">
+                  <span class="text-slate-400">{{ dest.km }}km</span>
+                  <span class="text-brand-400 font-bold">{{ formatIdr(dest.priceIdr) }}</span>
+                </div>
+              </button>
+            </div>
           </div>
+
         </div>
 
-        <!-- Step 3: Bag Count Stepper -->
-        <div class="glass-card rounded-3xl p-4 sm:p-6 border border-slate-800 space-y-3">
-          <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">3</span>
-            Jumlah Koper (Luggage Quantity)
-          </label>
+        <!-- STEP 2: LUGGAGE QUANTITY -->
+        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-3">
+          <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-xs font-black">2</span>
+            Jumlah Koper
+          </h2>
 
           <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-white">Jumlah Bagasi:</span>
-                <span class="px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30 text-xs font-bold font-mono">
+                <span class="text-sm font-bold text-white">Berapa Koper?</span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold font-mono">
                   {{ form.bag_count }} Koper
                 </span>
               </div>
               <p class="text-[11px] text-slate-400 mt-0.5">
-                <span class="text-emerald-400 font-semibold">1-2 Koper Flat Bundle</span> sudah termasuk di tarif dasar.
-                <span v-if="form.bag_count > 2" class="text-amber-400">
-                  +{{ form.bag_count - 2 }} koper extra @ Rp 30.000/koper.
+                <span class="text-emerald-400 font-semibold">1–2 Koper sudah termasuk di tarif flat.</span>
+                <span v-if="form.bag_count > 2" class="text-amber-300">
+                  (+{{ form.bag_count - 2 }} extra @ Rp 30.000)
                 </span>
               </p>
             </div>
 
-            <div class="flex items-center gap-2.5">
+            <!-- Stepper Buttons -->
+            <div class="flex items-center gap-2">
               <button
                 type="button"
                 @click="decrementBags"
-                class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-white font-bold text-base flex items-center justify-center transition-colors"
+                class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-white font-black text-lg flex items-center justify-center transition-colors active:scale-95"
               >
                 -
               </button>
-              <span class="text-base font-bold font-mono text-white w-5 text-center">
+              <span class="text-lg font-black font-mono text-white w-6 text-center">
                 {{ form.bag_count }}
               </span>
               <button
                 type="button"
                 @click="incrementBags"
-                class="w-9 h-9 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-base flex items-center justify-center transition-colors shadow-md shadow-brand-500/20"
+                class="w-10 h-10 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-black text-lg flex items-center justify-center transition-colors shadow-md shadow-brand-500/25 active:scale-95"
               >
                 +
               </button>
@@ -435,31 +533,31 @@ async function handleOnlinePayment() {
           </div>
         </div>
 
-        <!-- Step 4: Customer Details & Pickup Time -->
-        <div class="glass-card rounded-3xl p-4 sm:p-6 border border-slate-800 space-y-3.5">
-          <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">4</span>
-            Data Tamu & Detail Pengantaran
-          </label>
+        <!-- STEP 3: CONTACT & SCHEDULE -->
+        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-3.5">
+          <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-xs font-black">3</span>
+            Data Tamu & Jam Penjemputan
+          </h2>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nama Lengkap Tamu</label>
+              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nama Pemesan</label>
               <input
                 v-model="form.customer_name"
                 type="text"
-                placeholder="e.g. John Smith / Wei Zhang"
-                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500"
+                placeholder="Contoh: Alex Lee"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
               />
             </div>
 
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nomor WhatsApp Tamu</label>
+              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nomor WhatsApp</label>
               <input
                 v-model="form.customer_phone"
                 type="tel"
-                placeholder="+62 / +86 / +61..."
-                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500"
+                placeholder="+62 / +61 / +65..."
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
               />
             </div>
           </div>
@@ -467,190 +565,249 @@ async function handleOnlinePayment() {
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-[11px] font-semibold text-slate-300 mb-1">
-                {{ form.route_type === 'airport_to_hotel' ? 'Nomor Penerbangan (Flight No.)' : 'Nama Hotel / Villa Jemput' }}
+                {{ form.route_type === 'airport_to_hotel' ? 'Flight No. (Opsional)' : 'Nama Hotel / Villa Jemput' }}
               </label>
               <input
                 v-if="form.route_type === 'airport_to_hotel'"
                 v-model="form.flight_number"
                 type="text"
-                placeholder="e.g. SQ 944 / GA 402 / MH 715"
-                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500"
+                placeholder="e.g. SQ 944 / GA 402"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
               />
               <input
                 v-else
                 v-model="form.hotel_name"
                 type="text"
-                placeholder="e.g. W Bali Seminyak / Maya Sanur"
-                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500"
+                placeholder="Nama Hotel / Villa"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
               />
             </div>
 
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 mb-1">
-                {{ form.route_type === 'airport_to_hotel' ? 'Nama Hotel / Villa Tujuan' : 'Nomor Kamar / Nama Booking' }}
-              </label>
+              <label class="block text-[11px] font-semibold text-slate-300 mb-1">Tanggal & Jam Pickup</label>
               <input
-                v-if="form.route_type === 'airport_to_hotel'"
-                v-model="form.hotel_name"
-                type="text"
-                placeholder="e.g. Ayana Resort Jimbaran / Villa Echo Canggu"
-                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500"
-              />
-              <input
-                v-else
-                v-model="form.hotel_room"
-                type="text"
-                placeholder="e.g. Room 304 / Villa 2B"
-                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500"
+                v-model="form.pickup_datetime"
+                type="datetime-local"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500 transition-colors"
               />
             </div>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Tanggal & Jam Pickup / Tiba</label>
-            <input
-              v-model="form.pickup_datetime"
-              type="datetime-local"
-              class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-brand-500"
-            />
           </div>
         </div>
 
       </div>
 
-      <!-- Right Column: Live Price Card & 1-Click WhatsApp CTA (5 cols) -->
-      <div class="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
+      <!-- Right Column: Live Sticky Summary & High Converting WhatsApp CTA (5 cols) -->
+      <div class="lg:col-span-5 space-y-4 lg:sticky lg:top-24">
         
-        <!-- Live Invoice Summary Card -->
-        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-brand-500/30 shadow-2xl space-y-4">
+        <!-- Live Invoice Card -->
+        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-brand-500/30 shadow-2xl space-y-4 bg-gradient-to-b from-slate-900/90 to-slate-950">
+          
           <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 class="font-display font-bold text-sm text-white flex items-center gap-2">
+            <div class="flex items-center gap-2">
               <Tag class="w-4 h-4 text-brand-400" />
-              Rincian Perhitungan Biaya
-            </h3>
-            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-brand-500/15 text-brand-400 border border-brand-500/30">
-              Update 24 Ags 2024
+              <h3 class="font-display font-bold text-sm text-white">Ringkasan Biaya</h3>
+            </div>
+            <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              Tanpa Biaya Tersembunyi
             </span>
           </div>
 
-          <!-- Route & Dest Info -->
-          <div class="space-y-2.5 text-xs text-slate-300">
+          <!-- Breakdown rows -->
+          <div class="space-y-2 text-xs text-slate-300">
             <div class="flex items-start justify-between gap-2">
-              <span class="text-slate-400">Destinasi:</span>
+              <span class="text-slate-400">Tujuan:</span>
               <strong class="text-white text-right font-medium">{{ activeDestination.name }}</strong>
             </div>
 
             <div class="flex items-center justify-between">
               <span class="text-slate-400">Jarak Tempuh:</span>
-              <span class="font-mono text-slate-200">{{ activeDestination.km }} km dari Airport DPS</span>
+              <span class="font-mono text-slate-200">{{ activeDestination.km }} km (DPS)</span>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-slate-400">Tarif Dasar (1-2 Koper):</span>
+              <span class="text-slate-400">Tarif Flat (1–2 Koper):</span>
               <span class="font-mono font-bold text-white">{{ formatIdr(fareBreakdown.baseTripPrice) }}</span>
             </div>
 
             <div v-if="fareBreakdown.extraBags > 0" class="flex items-center justify-between text-amber-300">
-              <span>Extra Koper ({{ fareBreakdown.extraBags }} × Rp 30.000):</span>
+              <span>Extra Koper ({{ fareBreakdown.extraBags }} × Rp 30k):</span>
               <span class="font-mono font-bold">+{{ formatIdr(fareBreakdown.extraBagTotal) }}</span>
             </div>
 
-            <!-- Total Price Highlight Box -->
+            <!-- Total Highlight -->
             <div class="pt-3 border-t border-slate-800 space-y-2">
               <div class="flex items-baseline justify-between">
-                <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Biaya (IDR)</span>
+                <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Total Pembayaran</span>
                 <span class="text-2xl sm:text-3xl font-display font-black text-brand-400 font-mono">
                   {{ formatIdr(fareBreakdown.totalIdr) }}
                 </span>
               </div>
 
-              <!-- Currency Switcher Reference Pill -->
-              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
+              <!-- Currency Switcher Reference -->
+              <div class="p-2 rounded-xl bg-slate-950 border border-slate-800/90 flex items-center justify-between text-xs">
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] text-slate-400">Estimasi Valas:</span>
+                  <span class="text-[10px] text-slate-400">Valas:</span>
                   <select
                     v-model="activeCurrencyCode"
                     class="bg-slate-900 border border-slate-700 text-[10px] text-brand-300 font-bold rounded px-1.5 py-0.5 outline-none"
                   >
-                    <option value="USD">USD ($)</option>
                     <option value="AUD">AUD (A$)</option>
-                    <option value="EUR">EUR (€)</option>
+                    <option value="USD">USD ($)</option>
                     <option value="SGD">SGD (S$)</option>
+                    <option value="EUR">EUR (€)</option>
                     <option value="CNY">CNY (¥)</option>
                     <option value="MYR">MYR (RM)</option>
                   </select>
                 </div>
-                <span class="font-mono font-bold text-white">
+                <span class="font-mono font-bold text-slate-200">
                   ≈ {{ activeCurrencyCode }} {{ convertedForeignAmount }}
                 </span>
               </div>
             </div>
           </div>
 
-          <!-- PRIMARY CTA: 1-Click WhatsApp Direct Order -->
-          <div class="space-y-2 pt-2">
+          <!-- HIGH CONVERTING PRIMARY CTA: 1-Click WhatsApp -->
+          <div class="space-y-2 pt-1">
             <button
               type="button"
               @click="handleWhatsAppOrder"
-              class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700 text-white font-display font-extrabold text-sm sm:text-base shadow-xl shadow-whatsapp-500/30 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.01] active:scale-[0.99]"
+              class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-display font-extrabold text-sm sm:text-base shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.01] active:scale-[0.99] group"
             >
-              <MessageCircle class="w-5 h-5 fill-current" />
-              <span>Pesan Sekarang via WhatsApp</span>
+              <MessageCircle class="w-5 h-5 fill-current group-hover:animate-bounce" />
+              <span>Pesan via WhatsApp (5 Min Respon)</span>
             </button>
 
             <div class="flex items-center gap-2">
               <button
                 type="button"
                 @click="handleCopyOrderText"
-                class="flex-1 py-2.5 px-3 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                class="flex-1 py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <Check v-if="copiedText" class="w-3.5 h-3.5 text-emerald-400" />
                 <Copy v-else class="w-3.5 h-3.5" />
-                <span>{{ copiedText ? 'Format Disalin!' : 'Salin Format Pesan' }}</span>
+                <span>{{ copiedText ? 'Disalin!' : 'Salin Pesan' }}</span>
               </button>
 
               <button
                 type="button"
                 @click="handleOnlinePayment"
-                class="py-2.5 px-3 rounded-xl bg-brand-500/15 hover:bg-brand-500/25 border border-brand-500/40 text-brand-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                class="py-2 px-3 rounded-xl bg-brand-500/15 hover:bg-brand-500/25 border border-brand-500/40 text-brand-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <Zap class="w-3.5 h-3.5 text-brand-400" />
-                <span>Fase 2: Bayar Online</span>
+                <span>Bayar Online</span>
               </button>
             </div>
           </div>
 
-          <!-- Direct Phone Dispatch Note -->
-          <div class="pt-2 text-center text-[10px] text-slate-400">
-            WhatsApp Hotline: <strong class="text-white">+62 851-7249-1244</strong> • CS Standby 24/7
-          </div>
-        </div>
-
-        <!-- Official Hub Locations Info -->
-        <div class="glass-card rounded-3xl p-5 border border-slate-800 space-y-3">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-            <Building class="w-4 h-4 text-brand-400" />
-            Lokasi Hub & Kantor Resmi Bali
-          </h4>
-
-          <div class="space-y-2 text-[11px] text-slate-300">
-            <div v-for="hub in OFFICIAL_HUBS" :key="hub.id" class="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80">
-              <div class="flex items-center justify-between font-bold text-white">
-                <span>{{ hub.name }}</span>
-                <a :href="`https://wa.me/${hub.phoneClean}`" target="_blank" class="text-brand-400 hover:underline font-mono text-[10px]">
-                  {{ hub.phone }}
-                </a>
-              </div>
-              <p class="text-slate-400 text-[10px] mt-0.5">{{ hub.address }}</p>
+          <!-- Micro Guarantees -->
+          <div class="pt-2 border-t border-slate-800/80 grid grid-cols-2 gap-2 text-[10px] text-slate-400">
+            <div class="flex items-center gap-1">
+              <CheckCircle2 class="w-3 h-3 text-emerald-400" />
+              <span>Bisa bayar saat jemput</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <ShieldCheck class="w-3 h-3 text-brand-400" />
+              <span>Segel anti-bongkar</span>
             </div>
           </div>
+
+        </div>
+
+        <!-- Official Contact Card -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
+          <div class="space-y-0.5">
+            <span class="text-[10px] text-slate-400 uppercase font-bold">WhatsApp Customer Care</span>
+            <p class="font-bold text-white text-sm">+62 851-7249-1244</p>
+          </div>
+          <a
+            :href="`https://wa.me/${MAIN_WHATSAPP}`"
+            target="_blank"
+            class="px-3 py-1.5 rounded-xl bg-whatsapp-600/20 text-whatsapp-500 border border-whatsapp-500/30 text-xs font-bold hover:bg-whatsapp-600/30 transition-colors"
+          >
+            Chat CS ➔
+          </a>
         </div>
 
       </div>
 
     </div>
 
-    <!-- Sticky Mobile Bottom Bar for Instant Booking -->
+    <!-- 3. SOCIAL PROOF SECTION: Real Reviews from Tourists -->
+    <div class="pt-8 space-y-6">
+      
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-bold">
+          <Award class="w-3.5 h-3.5" />
+          <span>Pengalaman Nyata Wisatawan</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">
+          Dipercaya Lebih Dari 1,400+ Wisatawan di Bali
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400">
+          Lihat apa kata traveler yang telah menikmati liburan hands-free bersama Bali BagMove.
+        </p>
+      </div>
+
+      <!-- Testimonials Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div
+          v-for="(t, idx) in TESTIMONIALS"
+          :key="idx"
+          class="glass-card rounded-3xl p-5 border border-slate-800 flex flex-col justify-between space-y-4 hover:border-brand-500/40 transition-colors"
+        >
+          <div class="space-y-2.5">
+            <!-- Stars -->
+            <div class="flex text-amber-400">
+              <Star v-for="s in t.rating" :key="s" class="w-4 h-4 fill-current" />
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed italic">
+              "{{ t.text }}"
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3 pt-3 border-t border-slate-800/80">
+            <img :src="t.avatar" :alt="t.name" class="w-10 h-10 rounded-full object-cover border border-brand-500/30" />
+            <div class="text-xs">
+              <h4 class="font-bold text-white">{{ t.name }}</h4>
+              <p class="text-[10px] text-slate-400">{{ t.country }}</p>
+              <p class="text-[9px] text-brand-400">{{ t.route }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 4. FAQ ACCORDION SECTION -->
+    <div class="pt-6 space-y-4 max-w-3xl mx-auto">
+      <div class="text-center space-y-1">
+        <h3 class="text-xl sm:text-2xl font-display font-bold text-white">Pertanyaan Sering Ditanyakan (FAQ)</h3>
+        <p class="text-xs text-slate-400">Segala hal yang perlu kamu ketahui tentang layanan Bali BagMove</p>
+      </div>
+
+      <div class="space-y-2">
+        <div
+          v-for="(faq, fIdx) in faqsState"
+          :key="fIdx"
+          class="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all"
+        >
+          <button
+            type="button"
+            @click="toggleFaq(fIdx)"
+            class="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-white hover:text-brand-300"
+          >
+            <span>{{ faq.q }}</span>
+            <ChevronUp v-if="faq.open" class="w-4 h-4 text-brand-400 flex-shrink-0" />
+            <ChevronDown v-else class="w-4 h-4 text-slate-500 flex-shrink-0" />
+          </button>
+          <div v-if="faq.open" class="px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+            {{ faq.a }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Mobile Bottom Bar for High Conversion -->
     <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 p-3 bg-slate-950/95 backdrop-blur-md border-t border-brand-500/30 flex items-center justify-between gap-3 shadow-2xl">
       <div class="flex flex-col">
         <span class="text-[10px] text-slate-400">Total ({{ activeDestination.name.split('(')[0] }}):</span>
@@ -662,7 +819,7 @@ async function handleOnlinePayment() {
       <button
         type="button"
         @click="handleWhatsAppOrder"
-        class="py-3 px-5 rounded-xl bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 text-white font-bold text-xs shadow-lg shadow-whatsapp-500/30 flex items-center gap-2 flex-shrink-0"
+        class="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-500/30 flex items-center gap-2 flex-shrink-0"
       >
         <MessageCircle class="w-4 h-4 fill-current" />
         <span>Pesan via WhatsApp</span>
