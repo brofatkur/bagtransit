@@ -5,6 +5,7 @@ import { db } from '../../services/db.js';
 import { formatIdr } from '../../services/pricing.js';
 import { formatCurrency, COUNTRY_PAYMENT_MAP } from '../../services/xenith.js';
 import { getWhatsAppConciergeLink } from '../../services/whatsapp.js';
+import { currentLocale, t } from '../../i18n/index.js';
 import { 
   Search, 
   Luggage, 
@@ -32,13 +33,13 @@ const searchedBooking = ref(null);
 const statusLogs = ref([]);
 const notFound = ref(false);
 
-const STATUS_STEPS = [
-  { key: 'confirmed', label: 'Confirmed', desc: 'Payment verified & booking queued' },
-  { key: 'assigned', label: 'Courier Assigned', desc: 'Driver dispatched for collection' },
-  { key: 'picked_up', label: 'Picked Up', desc: 'Security seals attached & loaded' },
-  { key: 'in_transit', label: 'In Transit', desc: 'On the road to destination' },
-  { key: 'delivered', label: 'Delivered', desc: 'Safely handed over with photo proof' },
-];
+const STATUS_STEPS = computed(() => [
+  { key: 'confirmed', label: t('statusConfirmed'), desc: 'Booking queued & verified' },
+  { key: 'assigned', label: t('statusAssigned'), desc: 'Driver dispatched for collection' },
+  { key: 'picked_up', label: t('statusPickedUp'), desc: 'Security seals attached & loaded' },
+  { key: 'in_transit', label: t('statusInTransit'), desc: 'On the road to destination' },
+  { key: 'delivered', label: t('statusDelivered'), desc: 'Safely handed over with photo proof' },
+]);
 
 function loadBookingByCode(code) {
   if (!code) return;
@@ -86,7 +87,7 @@ const currentStepIndex = computed(() => {
   if (!searchedBooking.value) return 0;
   const status = searchedBooking.value.status;
   if (status === 'pending_payment') return -1;
-  const idx = STATUS_STEPS.findIndex(s => s.key === status);
+  const idx = STATUS_STEPS.value.findIndex(s => s.key === status);
   return idx !== -1 ? idx : 0;
 });
 
@@ -104,7 +105,7 @@ function getStatusBadgeColor(status) {
 function formatDate(isoStr) {
   if (!isoStr) return '';
   try {
-    return new Date(isoStr).toLocaleString('en-US', {
+    return new Date(isoStr).toLocaleString(currentLocale.lang === 'zh' ? 'zh-CN' : 'en-US', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
@@ -122,10 +123,10 @@ function formatDate(isoStr) {
     <!-- Top Search Header -->
     <div class="text-center max-w-2xl mx-auto mb-8">
       <h1 class="text-2xl sm:text-4xl font-display font-extrabold text-slate-900 tracking-tight">
-        Live Luggage <span class="gradient-text-brand">Tracking</span>
+        {{ t('trackTitle') }}
       </h1>
       <p class="mt-2 text-xs sm:text-sm text-slate-500">
-        Enter your Bali BagMove Booking Code to track real-time delivery status, courier info, and photo proof.
+        {{ t('trackSubtitle') }}
       </p>
 
       <!-- Search Bar -->
@@ -135,7 +136,7 @@ function formatDate(isoStr) {
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="e.g. BT-20260812-7891"
+            :placeholder="t('trackPlaceholder')"
             class="w-full pl-10 pr-4 py-3 rounded-2xl bg-white border border-slate-200 focus:border-brand-500 text-sm text-slate-900 font-mono uppercase tracking-wider outline-none shadow-sm"
           />
         </div>
@@ -143,14 +144,14 @@ function formatDate(isoStr) {
           type="submit"
           class="px-5 py-3 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-colors flex items-center gap-1.5"
         >
-          <span>Track</span>
+          <span>{{ t('trackButton') }}</span>
           <ArrowRight class="w-4 h-4" />
         </button>
       </form>
 
       <!-- Quick Demo Code Pills -->
       <div class="mt-3 flex items-center justify-center gap-2 text-xs text-slate-500">
-        <span>Try Demo:</span>
+        <span>{{ t('tryDemo') }}</span>
         <button
           v-for="demoCode in ['BT-20260812-7891', 'BT-20260812-4521', 'BT-20260812-9904']"
           :key="demoCode"
@@ -170,9 +171,9 @@ function formatDate(isoStr) {
       <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl">
         <AlertCircle class="w-6 h-6" />
       </div>
-      <h3 class="text-base font-bold text-slate-900">Booking Not Found</h3>
+      <h3 class="text-base font-bold text-slate-900">{{ t('bookingNotFound') }}</h3>
       <p class="text-xs text-slate-500">
-        No booking matched "<strong class="text-slate-800">{{ searchQuery }}</strong>". Please double check your booking code from your confirmation WhatsApp message.
+        {{ t('bookingNotFoundDesc') }}
       </p>
       <a
         :href="getWhatsAppConciergeLink(searchQuery)"
@@ -180,7 +181,7 @@ function formatDate(isoStr) {
         class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold hover:bg-emerald-100 transition-colors"
       >
         <MessageCircle class="w-4 h-4" />
-        Ask WhatsApp Support
+        WhatsApp Support
       </a>
     </div>
 
@@ -298,10 +299,10 @@ function formatDate(isoStr) {
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
               <UserCheck class="w-4 h-4 text-brand-600" />
-              Assigned Courier & Vehicle
+              {{ t('assignedCourierTitle') }}
             </h4>
             <span v-if="assignedCourier" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-              Verified Driver
+              {{ t('verifiedDriver') }}
             </span>
           </div>
 
@@ -332,9 +333,9 @@ function formatDate(isoStr) {
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
               <Image class="w-4 h-4 text-brand-600" />
-              Verified Luggage Proof Photos
+              {{ t('proofPhotoTitle') }}
             </h4>
-            <span class="text-[10px] text-slate-500">Tamper-Proof Seals</span>
+            <span class="text-[10px] text-slate-500">{{ t('tamperSealsTag') }}</span>
           </div>
 
           <div v-if="statusLogs.some(l => l.proof_photo_url)" class="space-y-3">
@@ -365,7 +366,7 @@ function formatDate(isoStr) {
       <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
           <Clock class="w-4 h-4 text-slate-400" />
-          Event & WhatsApp Notification Log
+          {{ t('eventLogTitle') }}
         </h4>
 
         <div class="space-y-2.5">
@@ -378,7 +379,7 @@ function formatDate(isoStr) {
               <div class="flex items-center gap-2">
                 <span class="font-bold text-slate-900 capitalize">{{ log.new_status.replace('_', ' ') }}</span>
                 <span v-if="log.whatsapp_sent" class="text-[10px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
-                  WhatsApp Sent
+                  {{ t('waDispatched') }}
                 </span>
               </div>
               <p class="text-slate-600 text-[11px]">{{ log.notes }}</p>
